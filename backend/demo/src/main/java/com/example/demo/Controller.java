@@ -1,4 +1,6 @@
 package com.example.demo;
+
+package com.example.demo;
 import com.example.demo.Event.Event;
 import com.example.demo.EventStudent.EventStudent;
 import com.example.demo.student.Student;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 // Testing Functions/ Practice with endpoints
 
 // Testing Controller so we can see connections with Frontend
@@ -19,14 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class Controller {
-
+    
     @GetMapping("/hello")
     public String sayHello() {
-        return "Hello!";
+        return "Hello World!"; 
     }
-
-
-
+  
+  
     @GetMapping("/getStudents")
     public List<Student> getStudents() {
         return List.of(
@@ -63,6 +63,3 @@ public class Controller {
     }
 
 }
-
-
-
