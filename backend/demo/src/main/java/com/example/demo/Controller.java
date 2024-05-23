@@ -1,6 +1,5 @@
 package com.example.demo;
 
-package com.example.demo;
 import com.example.demo.Event.Event;
 import com.example.demo.EventStudent.EventStudent;
 import com.example.demo.student.Student;
@@ -34,6 +33,7 @@ public class Controller {
                         1, "Test Name", "Test ID", "TestUserName"
                 ));
     }
+    
     @GetMapping("/getEvents")
     public List<Event> getEvents() {
         return List.of(
@@ -47,6 +47,7 @@ public class Controller {
                         null
                 ));
     }
+
     @GetMapping("/getEventStudents")
     public List<EventStudent> getEventStudents() {
         return List.of(
