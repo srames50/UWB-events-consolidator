@@ -1,31 +1,68 @@
 package com.example.demo.Event;
 
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+@Entity
+@Table
+//Class For Events of App
 public class Event {
-    private int eventID;
+    @Id
+    @SequenceGenerator(
+            name  = "event_sequence",
+            sequenceName = "event_sequence",
+            allocationSize = 1
+
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "event_sequence"
+    )
+    private int id;
     private String eventName;
-    private String eventAbout;
-    private LocalDateTime timeOfEventStart;
-    private LocalDateTime timeOfEventEnd;
-    private LocalDateTime timePosted;
-    private byte[] eventImage;
+    private String description;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String image;
+    private LocalDateTime createdAt;
 
-    public Event(int eventID, String eventName, String eventAbout, LocalDateTime timeOfEventStart, LocalDateTime timeOfEventEnd, LocalDateTime timePosted, byte[] eventImage) {
-        this.eventID = eventID;
+    public Event(String eventName, String description, LocalDateTime startTime, LocalDateTime endTime, LocalDate startDate, LocalDate endDate, String image) {
         this.eventName = eventName;
-        this.eventAbout = eventAbout;
-        this.timeOfEventStart = timeOfEventStart;
-        this.timeOfEventEnd = timeOfEventEnd;
-        this.timePosted = timePosted;
-        this.eventImage = eventImage;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.image = image;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public int getEventID() {
-        return eventID;
+    public Event(int id, String eventName, String description, LocalDateTime startTime, LocalDateTime endTime, LocalDate startDate, LocalDate endDate, String image) {
+        this.id = id;
+        this.eventName = eventName;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.image = image;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void setEventID(int eventID) {
-        this.eventID = eventID;
+    public Event() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEventName() {
@@ -36,55 +73,74 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public String getEventAbout() {
-        return eventAbout;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEventAbout(String eventAbout) {
-        this.eventAbout = eventAbout;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public LocalDateTime getTimeOfEventStart() {
-        return timeOfEventStart;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setTimeOfEventStart(LocalDateTime timeOfEventStart) {
-        this.timeOfEventStart = timeOfEventStart;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public LocalDateTime getTimeOfEventEnd() {
-        return timeOfEventEnd;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setTimeOfEventEnd(LocalDateTime timeOfEventEnd) {
-        this.timeOfEventEnd = timeOfEventEnd;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
-    public LocalDateTime getTimePosted() {
-        return timePosted;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setTimePosted(LocalDateTime timePosted) {
-        this.timePosted = timePosted;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public byte[] getEventImage() {
-        return eventImage;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setEventImage(byte[] eventImage) {
-        this.eventImage = eventImage;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
     public String toString() {
         return "Event{" +
-                "eventID=" + eventID +
+                "id=" + id +
                 ", eventName='" + eventName + '\'' +
-                ", eventAbout='" + eventAbout + '\'' +
-                ", timeOfEventStart=" + timeOfEventStart +
-                ", timeOfEventEnd=" + timeOfEventEnd +
-                ", timePosted=" + timePosted +
+                ", description='" + description + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", image='" + image + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

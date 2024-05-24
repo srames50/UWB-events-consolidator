@@ -11,17 +11,12 @@ public class StudentConfig {
     @Bean
     CommandLineRunner commandLineRunner(StudentRepo studentRepository) {
         return args -> {
-            Student test1 = new Student(
-                    1, "Test Name", "Test ID", "TestUserName"
-            );
 
             Student test2 = new Student(
-                     "Test Name", "Test ID", "TestUserName"
+                     "Test", "Test ID", "TestUserName"
             );
-            studentRepository.saveAll(
-                    List.of(test1,test2)
-            );
-
+            //adds Student
+            //studentRepository.save(test2);
         };
     }
 }

@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.Event.Event;
+//import com.example.demo.Event.Event;
 import com.example.demo.EventStudent.EventStudent;
 import com.example.demo.student.Student;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,7 @@ public class Controller {
                 ));
     }*/
     
-    @GetMapping("/getEvents")
+    /*@GetMapping("/getEvents")
     public List<Event> getEvents() {
         return List.of(
                 new Event(
@@ -46,7 +46,7 @@ public class Controller {
                         LocalDateTime.now(),
                         null
                 ));
-    }
+    }*/
 
     @GetMapping("/getEventStudents")
     public List<EventStudent> getEventStudents() {
