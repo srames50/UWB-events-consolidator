@@ -26,13 +26,13 @@ public class Controller {
     }
   
   
-    @GetMapping("/getStudents")
+   /* @GetMapping("/getStudents")
     public List<Student> getStudents() {
         return List.of(
                 new Student(
                         1, "Test Name", "Test ID", "TestUserName"
                 ));
-    }
+    }*/
     
     @GetMapping("/getEvents")
     public List<Event> getEvents() {
