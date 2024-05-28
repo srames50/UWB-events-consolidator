@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/home.dart';
-import 'package:frontend/pages/user_events.dart';
-import 'package:frontend/pages/event.dart';
+import 'package:frontend/components/drawer.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
@@ -22,50 +20,7 @@ class CalendarPage extends StatelessWidget {
           },
         ),
       ),
-      drawer: Drawer(
-        backgroundColor: const Color(0xFF4B2E83),
-        child: ListView(
-          children: [
-            ListTile(
-              title: const Text('Home', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Calendar', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const CalendarPage())
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('My Events', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const UserEventsPage())
-                );
-              },
-            ),
-            // add more as necessary
-          ],
-        ),
-      ),
+      drawer: AppDrawer(),
       body: const Center(
         child: Text('Calendar')
       ),

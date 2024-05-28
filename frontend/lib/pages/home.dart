@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/calendar.dart';
-import 'package:frontend/pages/user_events.dart';
-import 'package:frontend/pages/event.dart';
+import '../components/drawer.dart';
+import './event.dart';
 
 // Must use links for images rather than assets - makes loading from DB a lot easier and seamless
 
@@ -28,49 +27,7 @@ class HomePage extends StatelessWidget {
           },
         ),
       ),
-      drawer: Drawer(
-        backgroundColor: const Color(0xFF4B2E83),
-        child: ListView(
-          children: [
-            ListTile(
-              title: const Text('Home', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Calendar', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const CalendarPage())
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('My Events', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => UserEventsPage())
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Column(
