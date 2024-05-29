@@ -1,45 +1,50 @@
 package com.example.demo.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.util.Set;
+import java.util.HashSet;
+import com.example.demo.Event.Event;
 
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @SequenceGenerator(
-            name  = "user_sequence",
+            name = "user_sequence",
             sequenceName = "user_sequence",
             allocationSize = 1
-
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    // Database assigned ID
     private Integer ID;
-    // username of user
+
     private String userName;
-    // password of user
     private String password;
-    // Is the user an admin True if they are
     private Boolean adminPowers;
+    //Use this if you get stack overflow error should fix it
+    //@JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_events",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private Set<Event> events = new HashSet<>();
 
+    // Constructors
+    public User() {}
 
-
-    // constructors
-    public User() {
-    }
     public User(Boolean adminPowers, String password, String userName) {
         this.adminPowers = adminPowers;
         this.password = password;
         this.userName = userName;
     }
 
-
-
-    //getters and setters
-
+    // Getters and Setters
     public Integer getID() {
         return ID;
     }
@@ -72,7 +77,14 @@ public class User {
         this.adminPowers = adminPowers;
     }
 
-    // To string
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -82,6 +94,4 @@ public class User {
                 ", adminPowers=" + adminPowers +
                 '}';
     }
-
-
 }

@@ -1,26 +1,28 @@
 package com.example.demo.Event;
 
 import jakarta.persistence.*;
-
+import com.example.demo.user.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table
-//Class For Events of App
+@Table(name = "events")
 public class Event {
+
     @Id
     @SequenceGenerator(
-            name  = "event_sequence",
+            name = "event_sequence",
             sequenceName = "event_sequence",
             allocationSize = 1
-
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "event_sequence"
     )
     private int id;
+
     private String eventName;
     private String description;
     private LocalDateTime startTime;
@@ -29,6 +31,13 @@ public class Event {
     private LocalDate endDate;
     private String image;
     private LocalDateTime createdAt;
+    //Use this if you get stack overflow error should fix it
+    //@JsonIgnore
+    @ManyToMany(mappedBy = "events")
+    private Set<User> signedUpUsers = new HashSet<>();
+
+    // Constructors
+    public Event() {}
 
     public Event(String eventName, String description, LocalDateTime startTime, LocalDateTime endTime, LocalDate startDate, LocalDate endDate, String image) {
         this.eventName = eventName;
@@ -41,22 +50,7 @@ public class Event {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Event(int id, String eventName, String description, LocalDateTime startTime, LocalDateTime endTime, LocalDate startDate, LocalDate endDate, String image) {
-        this.id = id;
-        this.eventName = eventName;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.image = image;
-        this.createdAt = LocalDateTime.now();
-    }
-
-    public Event() {
-
-    }
-
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -127,6 +121,14 @@ public class Event {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<User> getSignedUpUsers() {
+        return signedUpUsers;
+    }
+
+    public void setSignedUpUsers(Set<User> signedUpUsers) {
+        this.signedUpUsers = signedUpUsers;
     }
 
     @Override
