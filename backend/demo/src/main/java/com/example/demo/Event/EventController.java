@@ -16,7 +16,7 @@ public class EventController {
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
-    // http://localhost:8080/event/allStudents
+    // http://localhost:8080/event/allEvents
     @GetMapping("allEvents")
     public List<Event> getStudents() {
         return eventService.getAllEvents();
