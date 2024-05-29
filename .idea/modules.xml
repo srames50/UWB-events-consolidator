@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/UWB-events-consolidator-Local.iml" filepath="$PROJECT_DIR$/.idea/UWB-events-consolidator-Local.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/demo/demo.iml" filepath="$PROJECT_DIR$/backend/demo/demo.iml" />
     </modules>
   </component>
 </project>

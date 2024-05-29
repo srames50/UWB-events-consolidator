@@ -25,7 +25,6 @@ public class EventService {
             throw  new IllegalArgumentException("Event already exists");
         }
         eventRepository.save(event);
-
     }
 }
 
