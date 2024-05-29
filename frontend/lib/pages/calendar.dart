@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
+import './event.dart';
 import 'package:intl/intl.dart';
 
 class CalendarPage extends StatefulWidget {

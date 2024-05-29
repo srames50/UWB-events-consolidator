@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../components/drawer.dart';
 import './event.dart';
+import './eventsearch.dart';
 
 // Must use links for images rather than assets - makes loading from DB a lot easier and seamless
 class HomePage extends StatelessWidget {
