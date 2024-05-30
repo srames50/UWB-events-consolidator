@@ -52,42 +52,4 @@ public class Controller {
             )
         );
     }
-
-    // Uncomment the following code to add more endpoints for getting students and events
-
-    /**
-     * Endpoint to return a list of Student objects for testing purposes.
-     * 
-     * @return a list of Student objects
-     */
-    /*
-    @GetMapping("/getStudents")
-    public List<Student> getStudents() {
-        return List.of(
-            new Student(
-                1, "Test Name", "Test ID", "TestUserName"
-            ));
-    }
-    */
-
-    /**
-     * Endpoint to return a list of Event objects for testing purposes.
-     * 
-     * @return a list of Event objects
-     */
-    /*
-    @GetMapping("/getEvents")
-    public List<Event> getEvents() {
-        return List.of(
-            new Event(
-                1,
-                "Sample Event",
-                "This is a test event to demonstrate the Event class.",
-                LocalDateTime.of(2024, 5, 22, 10, 0),
-                LocalDateTime.of(2024, 5, 22, 12, 0),
-                LocalDateTime.now(),
-                null
-            ));
-    }
-    */
 }
