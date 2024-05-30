@@ -6,10 +6,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Repository interface for Student entity.
+ * Extends JpaRepository to provide CRUD operations on Student entities.
+ */
 @Repository
 public interface StudentRepo extends JpaRepository<Student, Integer> {
-    //@Query("SELECT s FROM Student s WHERE s.id = ? 1")
-    Optional<Student> findBySchoolID(String SchoolID);
 
-
+    /**
+     * Custom query method to find a student by their school ID.
+     *
+     * @param schoolID the school ID to search for
+     * @return an Optional containing the found Student, or empty if not found
+     */
+    Optional<Student> findBySchoolID(String schoolID);
 }
