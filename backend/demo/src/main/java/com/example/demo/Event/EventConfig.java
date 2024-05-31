@@ -19,6 +19,8 @@ public class EventConfig {
      * @param eventRepository the repository to save the event
      * @return CommandLineRunner to run the initialization code
      */
+    //Command line will run everytime the program is run
+    // Its use is to add events until we have real ones
     @Bean
     CommandLineRunner EventcommandLineRunner(EventRepository eventRepository) {
         return args -> {
@@ -32,10 +34,10 @@ public class EventConfig {
             String image = "spring_festival.png";
 
             // Create a new Event object
-            Event event = new Event(eventName, description, startTime, endTime, startDate, endDate, image);
+            Event event = new Event(eventName, description, startTime, endTime, startDate, endDate, null);
 
             // Add the event to the repository (commented out)
-            // eventRepository.save(event);
+            eventRepository.save(event);
         };
     }
 }

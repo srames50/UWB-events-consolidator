@@ -36,6 +36,12 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
+    @GetMapping("homeEvents")
+    public List<Event> getHomeEvents() {
+        return eventService.getHomePageEvents();
+    }
+
+
     /**
      * Endpoint to register a new event.
      *

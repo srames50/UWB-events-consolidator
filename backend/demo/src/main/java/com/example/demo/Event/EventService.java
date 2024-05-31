@@ -45,4 +45,33 @@ public class EventService {
         }
         eventRepository.save(event);
     }
+
+    /**
+     * Gets the events for the homepage
+     *
+     * @return Events need for the homepage
+     * @throws IllegalArgumentException if there are no events with images
+     */
+    public List<Event> getHomePageEvents() throws IllegalArgumentException{
+        List<Event> imageEvents = eventRepository.getSortedImageEvents();
+        if (imageEvents.isEmpty()) {
+            throw new IllegalArgumentException("No image events found");
+        }
+        // Get the events with images
+        if(imageEvents.size() > 1){
+            imageEvents = imageEvents.subList(0, 1);
+        }
+        // get the rest of the events that are not already added
+        for(Event event : eventRepository.getSortedEvents()){
+            if(!imageEvents.contains(event)){
+                imageEvents.add(event);
+            }
+            // stop adding when there are enough events
+            if(imageEvents.size() == 3){
+                break;
+            }
+        }
+        return imageEvents;
+    }
+
 }
