@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -13,11 +14,12 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     /**
-     * Custom query method to find a user by their username.
+     * Custom query method to find a user by their ID.
      *
-     * @param username the username to search for
+     * @param ID the username to search for
      * @return an Optional containing the found User, or empty if not found
      */
-    Optional<User> findByUserName(String username);
+    Optional<User> findByID(Integer ID);
+
 
 }
