@@ -31,6 +31,7 @@ class _EventSearchPageState extends State<EventSearchPage> {
         .toList();
     setState(() {
       _filteredEvents = filtered; // Update the filtered events list
+
     });
   }
 
@@ -61,6 +62,7 @@ class _EventSearchPageState extends State<EventSearchPage> {
                   return ListTile(
                     title: Text(_filteredEvents[index]),
                     onTap: () {
+
                       // Navigate to the EventPage when an event is tapped
                       Navigator.push(
                         context,
