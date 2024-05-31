@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/drawer.dart';
 
-
+// UserEventsPage represents the user's events. It includes a header, a drawer for navigation, and the user's events.
 class UserEventsPage extends StatelessWidget {
   const UserEventsPage({super.key});
 
@@ -21,7 +21,7 @@ class UserEventsPage extends StatelessWidget {
           },
         ),
       ),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(), // Drawer with navigation options
       body: const Center(
         child: Text('My Events')
       ),
