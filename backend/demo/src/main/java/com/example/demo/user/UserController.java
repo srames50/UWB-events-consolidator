@@ -68,7 +68,7 @@ public class UserController {
 
     /**
      * Endpoint to register a new user.
-     *
+     *USE TO TEST/ADD Invoke-RestMethod -Uri http://localhost:8080/user/addUser -Method Post -ContentType "application/json" -Body '{"userName": "john.doe","password": "secretpassword","adminPowers": false}'
      * @param user the user object to be registered
      */
     @PostMapping("/addUser")
