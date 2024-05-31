@@ -1,11 +1,9 @@
 package com.example.demo.Event;
 
-import com.example.demo.student.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller class for managing Event-related HTTP requests.
