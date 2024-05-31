@@ -1,7 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.EventStudent.EventStudent;
-import com.example.demo.student.Student;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,29 +26,5 @@ public class Controller {
         return "Hello World!"; 
     }
 
-    /**
-     * Endpoint to return a list of EventStudent objects for testing purposes.
-     * 
-     * @return a list of EventStudent objects
-     */
-    @GetMapping("/getEventStudents")
-    public List<EventStudent> getEventStudents() {
-        return List.of(
-            new EventStudent(
-                1, // Event ID
-                1, // Student ID
-                1  // Role ID
-            ),
-            new EventStudent(
-                2, // Event ID
-                2, // Student ID
-                1  // Role ID
-            ),
-            new EventStudent(
-                3, // Event ID
-                1, // Student ID
-                2  // Role ID
-            )
-        );
-    }
+
 }

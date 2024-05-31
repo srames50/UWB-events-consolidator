@@ -71,8 +71,8 @@ public class UserController {
      *
      * @param user the user object to be registered
      */
-    @PostMapping
-    public void registerEvent(@RequestBody User user) {
+    @PostMapping("/addUser")
+    public void registerUser(@RequestBody User user) {
         userService.addUser(user);
     }
 }
