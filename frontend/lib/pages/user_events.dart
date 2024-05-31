@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/home.dart';
-import 'package:frontend/pages/calendar.dart';
-import 'package:frontend/pages/event.dart';
+import 'package:frontend/components/drawer.dart';
 
+// UserEventsPage represents the user's events. It includes a header, a drawer for navigation, and the user's events.
 class UserEventsPage extends StatelessWidget {
   const UserEventsPage({super.key});
 
@@ -22,50 +21,7 @@ class UserEventsPage extends StatelessWidget {
           },
         ),
       ),
-      drawer: Drawer(
-        backgroundColor: const Color(0xFF4B2E83),
-        child: ListView(
-          children: [
-            ListTile(
-              title: const Text('Home', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Calendar', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const CalendarPage())
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('My Events', style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 19
-              )),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const UserEventsPage())
-                );
-              },
-            ),
-            // add more as necessary
-          ],
-        ),
-      ),
+      drawer: AppDrawer(), // Drawer with navigation options
       body: const Center(
         child: Text('My Events')
       ),
