@@ -50,10 +50,10 @@ public class EventController {
 
     /**
      * Endpoint to register a new event.
-     *
+     * USE TO ADD/POST EVENT
      * @param event the event object to be added
      */
-    @PostMapping
+    @PostMapping("/addEvent")
     public void registerEvent(@RequestBody Event event) {
         eventService.addNewEvent(event);
     }

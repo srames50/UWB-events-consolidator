@@ -49,6 +49,20 @@ public class UserController {
         return userService.eventsForUser(ID);
     }
 
+    /**
+     * Adds user to event
+     * @param userId the user you want to add
+     * @param eventId the event you want to add
+     */
+    @PostMapping("/addUserToEvent/{userId}/{eventId}")
+    public void addUserToEvent(@PathVariable Integer userId, @PathVariable Integer eventId) {
+        try {
+            userService.addUserToEvent(userId, eventId);
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
 
 

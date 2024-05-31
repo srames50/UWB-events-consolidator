@@ -37,6 +37,7 @@ public class User {
     private Boolean adminPowers;
 
     // Events associated with the user
+    @JsonIgnore //Added to avoid stack overflow
     @ManyToMany
     @JoinTable(
             name = "user_events",

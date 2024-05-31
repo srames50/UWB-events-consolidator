@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 import com.example.demo.Event.Event;
+import com.example.demo.Event.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class UserService {
 
     // Repository to handle CRUD operations on User entities
     private final UserRepository userRepository;
+    private final EventRepository eventRepository;
 
     /**
      * Constructor for UserService.
@@ -24,8 +26,9 @@ public class UserService {
      * @param userRepository the repository to handle user operations
      */
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -60,5 +63,30 @@ public class UserService {
             throw new IllegalArgumentException("User not found");
         }
 
+    }
+
+    /**
+     * Adds user to the event
+     * @param userId the event of the user
+     * @param eventId the event of the ID
+     * @throws IllegalArgumentException if the user is already in the event or the event or user is not present
+     */
+    public void addUserToEvent(Integer userId, Integer eventId) throws IllegalArgumentException {
+        Optional<User> userOpt = userRepository.findById(userId);
+        Optional<Event> eventOpt = eventRepository.findById(eventId);
+        if (userOpt.isPresent() && eventOpt.isPresent()) {
+            if(userOpt.get().getEvents().contains(eventOpt.get())) {
+                throw new IllegalArgumentException("User already has an event");
+            }
+            User user = userOpt.get();
+            Event event = eventOpt.get();
+            user.getEvents().add(event);
+            userRepository.save(user);
+        } else if (!userOpt.isPresent()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        else  {
+            throw new IllegalArgumentException("Event not found");
+        }
     }
 }
