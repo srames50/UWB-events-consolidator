@@ -3,6 +3,7 @@ package com.example.demo.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,15 +35,15 @@ public class EventService {
 
     /**
      * Adds a new event to the repository.
-     *
      * @param event the event object to be added
      * @throws IllegalArgumentException if an event with the same name already exists
      */
     public void addNewEvent(Event event) {
-        Optional<Event> eventOptional = eventRepository.findByEventName(event.getEventName());
+        Optional<Event> eventOptional = eventRepository.findById(event.getId());
         if (eventOptional.isPresent()) {
             throw new IllegalArgumentException("Event already exists");
         }
+        event.setCreatedAt(LocalDateTime.now());
         eventRepository.save(event);
     }
 

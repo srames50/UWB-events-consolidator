@@ -49,6 +49,7 @@ public class EventController {
     /**
      * Endpoint to register a new event.
      * USE TO ADD/POST EVENT
+     * USE TO TEST/ADD Invoke-RestMethod -Uri http://localhost:8080/event/addEvent -Method Post -ContentType "application/json" -Body '{"eventName":"New","description":"Event Description","startTime":"2024-06-01T10:00:00","endTime":"2024-06-01T12:00:00","startDate":"2024-06-01","endDate":"2024-06-01","image":"image_url"}'
      * @param event the event object to be added
      */
     @PostMapping("/addEvent")

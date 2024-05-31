@@ -1,5 +1,6 @@
 package com.example.demo.Event;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,10 +17,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     /**
      * Finds an event by its name.
      *
-     * @param eventName the name of the event to find
+     * @param ID the name of the event to find
      * @return an Optional containing the found event, or an empty Optional if no event found
      */
-    Optional<Event> findByEventName(String eventName);
+    Optional<Event> findById(Integer ID);
 
     /**
      *Query that gets all events with images. Will later sort to get however many are wanted for the homepage
