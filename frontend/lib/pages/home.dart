@@ -5,6 +5,7 @@ import './event.dart';
 import './eventsearch.dart';
 
 // Must use links for images rather than assets - makes loading from DB a lot easier and seamless
+// HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -18,7 +19,7 @@ class HomePage extends StatelessWidget {
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.menu), // Hamburger icon for the drawer
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -28,18 +29,18 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search), // Search Icon
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EventSearchPage()),
+                MaterialPageRoute(builder: (context) => EventSearchPage()), // Navigate to EventSearchPage
               );
             },
             color: Color(0xFF4B2E83),
           ),
         ],
       ),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(), // Drawer with navigation options
       body: Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: Column(
@@ -48,6 +49,7 @@ class HomePage extends StatelessWidget {
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 10),
+                    // New events
                     child: Text('New This Week: XX/XX/20XX', textAlign: TextAlign.center, style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -55,6 +57,7 @@ class HomePage extends StatelessWidget {
                     )),
                   ),
                 ),
+                // Featured Events displayed below
                 Padding(
                   padding: EdgeInsets.only(left: 15),
                   child: SizedBox(
