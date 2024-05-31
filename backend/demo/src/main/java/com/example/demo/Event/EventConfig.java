@@ -37,7 +37,7 @@ public class EventConfig {
             Event event = new Event(eventName, description, startTime, endTime, startDate, endDate, null);
 
             // Add the event to the repository (commented out)
-            eventRepository.save(event);
+            //eventRepository.save(event);
         };
     }
 }

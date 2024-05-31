@@ -28,7 +28,7 @@ public class EventController {
     /**
      * Endpoint to retrieve all events.
      * Example URL: http://localhost:8080/event/allEvents
-     *
+     * USED TO CONNECT TO SEARCH BAR
      * @return a list of all events
      */
     @GetMapping("allEvents")
@@ -36,6 +36,12 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
+    /**
+     * Gets the events for the homepage (Two with picture) (Next Five)
+     * Example URL: http://localhost:8080/event/homeEvents
+     * USED TO CONNECT TO HOMEPAGE
+     * @return the needed events for the homepage
+     */
     @GetMapping("homeEvents")
     public List<Event> getHomeEvents() {
         return eventService.getHomePageEvents();

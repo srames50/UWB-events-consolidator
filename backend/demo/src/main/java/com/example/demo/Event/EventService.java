@@ -58,8 +58,8 @@ public class EventService {
             throw new IllegalArgumentException("No image events found");
         }
         // Get the events with images
-        if(imageEvents.size() > 1){
-            imageEvents = imageEvents.subList(0, 1);
+        if(imageEvents.size() > 2){
+            imageEvents = imageEvents.subList(0, 2);
         }
         // get the rest of the events that are not already added
         for(Event event : eventRepository.getSortedEvents()){
@@ -67,7 +67,7 @@ public class EventService {
                 imageEvents.add(event);
             }
             // stop adding when there are enough events
-            if(imageEvents.size() == 3){
+            if(imageEvents.size() == 7){
                 break;
             }
         }
