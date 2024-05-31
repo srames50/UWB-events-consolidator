@@ -16,10 +16,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     /**
      * Custom query method to find a user by their ID.
      *
-     * @param ID the username to search for
+     * @param username the username to search for
      * @return an Optional containing the found User, or empty if not found
      */
-    Optional<User> findByID(Integer ID);
+    Optional<User> findByUserName(String username);
 
 
 }

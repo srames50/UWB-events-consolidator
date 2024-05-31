@@ -46,6 +46,11 @@ public class UserService {
      * @param user the user object to be added
      */
     public void addUser(User user) {
+        //Uncomment when in production
+        /*Optional<User> possibleUser = userRepository.findByUserName(user.getUserName());
+        if (possibleUser.isPresent()) {
+            throw new IllegalArgumentException("User already exists");
+        }*/
         userRepository.save(user);
     }
 
