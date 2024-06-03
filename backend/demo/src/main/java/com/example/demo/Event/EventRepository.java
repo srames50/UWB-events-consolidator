@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,14 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      */
     @Query("SELECT e FROM Event e WHERE e.image IS NULL ORDER BY e.startDate, e.startTime")
     List<Event> getSortedEvents();
+
+    /**
+     * Query that gets events occurring on a specific date.
+     *
+     * @param date the date to search for events
+     * @return a list of events occurring on the specified date
+     */
+    @Query("SELECT e FROM Event e WHERE :date BETWEEN e.startDate AND e.endDate")
+    Optional<List<Event>> getEventsByDate(LocalDate date);
 
 }

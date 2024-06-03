@@ -3,6 +3,7 @@ package com.example.demo.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,27 @@ public class EventService {
                 break;
             }
         }
+
         return imageEvents;
+    }
+
+    public List<Event> getEventsByDate(Integer month,Integer day,Integer year) throws IllegalArgumentException{
+        try{
+            LocalDate localDate = LocalDate.of(year,month,day);
+            Optional<List<Event>> possibleEvents = eventRepository.getEventsByDate(localDate);
+            if(possibleEvents.isPresent()){
+                return possibleEvents.get();
+            }else{
+                throw new NullPointerException("No events on specified date");
+
+            }
+        }
+        catch (Exception e){
+            throw new IllegalArgumentException("Must enter a valid date");
+        }
+
+
+
     }
 
 }

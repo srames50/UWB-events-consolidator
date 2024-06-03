@@ -45,6 +45,13 @@ public class EventController {
         return eventService.getHomePageEvents();
     }
 
+    @GetMapping("byDate/{month}/{day}/{year}")
+    public List<Event> getByDate(@PathVariable Integer month,
+                                 @PathVariable Integer day, @PathVariable Integer year) {
+        return eventService.getEventsByDate(month,day,year);
+    }
+
+
 
     /**
      * Endpoint to register a new event.
