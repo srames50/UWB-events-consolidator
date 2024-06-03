@@ -50,7 +50,7 @@ class _EventPageState extends State<EventPage> {
     });
     try {
       // Get the data string and pass it into fetchEvents
-      final data = await apiService.getHomePageData();
+      final data = await apiService.getAllEvents();
       final event = await _fetchEvent(data, widget.title);
       setState(() {
         if (event != null) {

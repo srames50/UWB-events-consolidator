@@ -26,4 +26,19 @@ class ApiService {
       throw Exception('Failed to load data: $e');
     }
   }
+
+  Future<String> getAllEvents() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/event/allEvents'));
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        // Handle the different status codes if needed
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle any other type of exception
+      throw Exception('Failed to load data: $e');
+    }
+  }
 }
