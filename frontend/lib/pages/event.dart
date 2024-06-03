@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_typing_uninitialized_variables
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/home.dart';
+import 'package:frontend/api_service.dart';
 
 class EventPage extends StatefulWidget {
   final String title;
@@ -51,7 +52,7 @@ class _EventPageState extends State<EventPage> {
               icon: const Icon(Icons.chevron_left),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
+                  MaterialPageRoute(builder: (context) => HomePage())
                 );
               },
             );

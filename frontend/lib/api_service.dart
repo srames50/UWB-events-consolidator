@@ -12,9 +12,9 @@ class ApiService {
   ///
   /// Returns the response body as a string if the request is successful.
   /// Throws an [Exception] if the request fails.
-  Future<String> getData() async {
+  Future<String> getHomePageData() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/api/hello'));
+      final response = await http.get(Uri.parse('$baseUrl/event/homeEvents'));
       if (response.statusCode == 200) {
         return response.body;
       } else {
