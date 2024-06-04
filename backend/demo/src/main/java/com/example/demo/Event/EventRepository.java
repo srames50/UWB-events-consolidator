@@ -53,4 +53,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e where e.eventName = :name")
     Optional<Event> getEventByEventName(String name);
 
+    /**
+     * Query that gets all events with the phrase in the name
+     * @param phrase part of search by user
+     * @return List of events with phrase in it
+     */
+    @Query("SELECT e FROM Event e WHERE e.eventName LIKE %:phrase%")
+    Optional<List<Event>> getEventsWithPhrase(String phrase);
+
 }

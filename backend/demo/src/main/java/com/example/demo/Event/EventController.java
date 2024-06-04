@@ -58,7 +58,6 @@ public class EventController {
                                  @PathVariable Integer day, @PathVariable Integer year) {
         return eventService.getEventsByDate(month,day,year);
     }
-
     /**
      *End Point to find event by Name
      * @param name Name of search
@@ -70,6 +69,15 @@ public class EventController {
         return eventService.getByName(name);
     }
 
+    /**
+     * Finds events with a specific word/phrase in them
+     * @param search the search var input by the user
+     * @return list of matching events
+     */
+    @GetMapping("byNamePartial/{search}")
+    public List<Event> getByNamePartial(@PathVariable String search){
+        return eventService.getByNamePartial(search);
+    }
 
 
     /**

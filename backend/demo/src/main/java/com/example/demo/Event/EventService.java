@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,6 +117,21 @@ public class EventService {
         }else{
             throw new NullPointerException("No event found");
         }
+    }
+    public List<Event> getByNamePartial(String name) throws NullPointerException{
+        String[] splitName = name.split("_");
+        List<Event> events = new ArrayList<>();
+        for(String phrase: splitName){
+            Optional<List<Event>> optionalEvents = eventRepository.getEventsWithPhrase(phrase);
+            if(optionalEvents.isPresent()){
+                events.addAll(optionalEvents.get());
+            }
+        }
+        if(events.isEmpty()){
+            throw  new NullPointerException("No Events match name");
+        }
+        return events;
+
     }
 
 }
