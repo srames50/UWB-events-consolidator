@@ -72,6 +72,7 @@ public class EventController {
     /**
      * Finds events with a specific word/phrase in them
      * @param search the search var input by the user
+     * EXAMPLE http://localhost:8080/event/byNamePartial/Rahul_Spring
      * @return list of matching events
      */
     @GetMapping("byNamePartial/{search}")
