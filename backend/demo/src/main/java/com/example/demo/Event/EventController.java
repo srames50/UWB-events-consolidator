@@ -45,6 +45,14 @@ public class EventController {
         return eventService.getHomePageEvents();
     }
 
+    /**
+     * End point to get events on a certain date
+     * @param month month of date
+     * @param day day of date
+     * @param year year of date
+     * EXAMPLE http://localhost:8080/event/byDate/06/01/2024
+     * @return JSON of all events on that date
+     */
     @GetMapping("byDate/{month}/{day}/{year}")
     public List<Event> getByDate(@PathVariable Integer month,
                                  @PathVariable Integer day, @PathVariable Integer year) {

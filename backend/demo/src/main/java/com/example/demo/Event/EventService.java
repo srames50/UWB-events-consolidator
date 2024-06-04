@@ -77,7 +77,17 @@ public class EventService {
         return imageEvents;
     }
 
-    public List<Event> getEventsByDate(Integer month,Integer day,Integer year) throws IllegalArgumentException{
+
+    /**
+     * Gets all events that take place on a specified date
+     * @param month month of date
+     * @param day day of date
+     * @param year year of date
+     * @return List of Dates if They exist
+     * @throws IllegalArgumentException If date is entered incorrectly
+     * @throws NullPointerException If there are no events on that date
+     */
+    public List<Event> getEventsByDate(Integer month,Integer day,Integer year) throws IllegalArgumentException, NullPointerException{
         try{
             LocalDate localDate = LocalDate.of(year,month,day);
             Optional<List<Event>> possibleEvents = eventRepository.getEventsByDate(localDate);
@@ -91,6 +101,7 @@ public class EventService {
         catch (Exception e){
             throw new IllegalArgumentException("Must enter a valid date");
         }
+
 
 
 
