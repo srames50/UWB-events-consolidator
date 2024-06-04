@@ -9,14 +9,22 @@ import 'package:intl/intl.dart';
 import './home.dart';
 
 Future<Event?> _fetchEvent(String jsonString, String name) async {
-  // Get the json data by parsing the passed in string
+  // Get the json data by parsing the passed-in string
   final List<dynamic> jsonData = jsonDecode(jsonString);
 
   // Find and return the first event that matches the given name
-  return jsonData
-      .map((json) => Event.fromJson(json))
-      .firstWhere((event) => event.eventName == name);
+  Event? event;
+  try {
+    event = jsonData
+        .map((json) => Event.fromJson(json))
+        .firstWhere((event) => event.eventName == name);
+  } catch (e) {
+    print('Error fetching event: $e');
+  }
+
+  return event;
 }
+
 
 class EventPage extends StatefulWidget {
   final String title;
@@ -166,17 +174,33 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
+  try {
     return Event(
-      id: json['id'],
-      eventName: json['eventName'],
-      description: json['description'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
-      image: json['image'],
-      createdAt: DateTime.parse(json['createdAt']),
-      signedUpUsers: json['signedUpUsers'],
+      id: json['id'] ?? 0,
+      eventName: json['eventName'] ?? 'Event Name',
+      description: json['description'] ?? 'Description',
+      startTime: json['startTime'] != null ? DateTime.parse(json['startTime']) : DateTime.now(),
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : DateTime.now(),
+      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : DateTime.now(),
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : DateTime.now(),
+      image: json['image'] ?? '', // Adjusted for null images
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      signedUpUsers: json['signedUpUsers'] ?? [],
     );
+  } catch (e) {
+    print('Error parsing event: $e');
+    return Event(
+      id: 0,
+      eventName: 'Error Event',
+      description: 'Error Description',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      image: '',
+      createdAt: DateTime.now(),
+      signedUpUsers: [],
+    );
+  }
   }
 }

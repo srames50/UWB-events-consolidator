@@ -1,11 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:frontend/api_service.dart'; // Import your ApiService
 import './event.dart';
+import 'dart:convert';
 import 'package:intl/intl.dart';
 
-// This class represents the Calendar page of the application.
-// It displays a calendar with events and allows the user to navigate through different dates and view events on those dates.
+Future<Map<DateTime, List<Event>>> _fetchEvents() async {
+  final apiService = ApiService('http://localhost:8080');
+  try {
+    final data = await apiService.getAllEvents();
+    final List<dynamic> jsonData = jsonDecode(data);
+    Map<DateTime, List<Event>> eventsMap = {};
+    for (var json in jsonData) {
+      Event? event;
+    try {
+      event = Event.fromJson(json);
+      print('Parsed event: ${event?.eventName ?? 'Unknown'} - $event'); // Include event name in debug print
+    } catch (e) {
+      print('Error parsing event: $e');
+    }
+      if (event != null && event.startDate != null && event.startTime != null) {
+        DateTime fullStartDateTime = DateTime(
+          event.startDate!.year,
+          event.startDate!.month,
+          event.startDate!.day,
+          event.startTime!.hour,
+          event.startTime!.minute,
+        );
+        if (eventsMap.containsKey(fullStartDateTime)) {
+          eventsMap[fullStartDateTime]!.add(event);
+        } else {
+          eventsMap[fullStartDateTime] = [event];
+        }
+      }
+    }
+    print('Events map: $eventsMap'); // Debug: Print events map
+    return eventsMap;
+  } catch (e) {
+    print('Error fetching events: $e');
+    return {};
+  }
+}
+
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
 
@@ -13,37 +50,31 @@ class CalendarPage extends StatefulWidget {
   _CalendarPageState createState() => _CalendarPageState();
 }
 
+// This class represents the Calendar page of the application.
+// It displays a calendar with events and allows the user to navigate through different dates and view events on those dates.
 class _CalendarPageState extends State<CalendarPage> {
-  late CalendarFormat _calendarFormat; // Variable to store the format of the calendar
-  late DateTime _focusedDay; // Variable to store the currently focused day
-  late DateTime _selectedDay; // Variable to store the currently selected day
-  Map<DateTime, List<Event>> _events = {}; // Map to store events with their corresponding dates
+  late CalendarFormat _calendarFormat;
+  late DateTime _focusedDay;
+  late DateTime _selectedDay;
+  Map<DateTime, List<Event>> _events = {};
 
   @override
-  // Initializes the focused day, selected day, calendar format, and fetches events.
   void initState() {
     super.initState();
     final now = DateTime.now();
     _focusedDay = DateTime(now.year, now.month, now.day);
     _selectedDay = _focusedDay;
     _calendarFormat = CalendarFormat.month;
-    _events = _getEvents(); // You need to implement this method to get events
+    _fetchAndSetEvents();
   }
 
-  Map<DateTime, List<Event>> _getEvents() {
-    // Fetch events from your data source and return them as a map
-    // This is just a mock implementation
-    return {
-      DateTime.now().subtract(Duration(days: 1)): [
-        Event('Event 1', 'Description 1', 'https://example.com/image1.jpg'),
-      ],
-      DateTime.now().add(Duration(days: 2)): [
-        Event('Event 2', 'Description 2', 'https://example.com/image2.jpg'),
-      ],
-    };
+  Future<void> _fetchAndSetEvents() async {
+    final events = await _fetchEvents();
+    setState(() {
+      _events = events;
+    });
   }
 
-  // To Build the UI of the Calendar page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,87 +85,91 @@ class _CalendarPageState extends State<CalendarPage> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                Scaffold.of(context).openDrawer(); // Open the drawer when the menu icon is pressed
+                Scaffold.of(context).openDrawer();
               },
             );
           },
         ),
       ),
-      drawer: AppDrawer(), // Add the drawer component widget
+      drawer: AppDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // TableCalendar widget to display the calendar
             TableCalendar(
               firstDay: DateTime.utc(2023, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day), // To check if a day is selected
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-              },
-              eventLoader: (day) {
-                return _events[day] ?? []; // Load events for the selected day
-              },
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+                _fetchAndSetEvents(); // Refresh events when a new day is selected
+              });
+            },
+              eventLoader: (day) => _events[day] ?? [],
             ),
-            _buildEvents(), // Build the list of events for the selected day
+            _buildEvents(),
           ],
         ),
       ),
     );
   }
 
-  // Method to build the list of events for the selected day
-  Widget _buildEvents() {
-    final events = _events[_selectedDay] ?? [];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Display the selected date and events
+Widget _buildEvents() {
+  final selectedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+  final events = _events[selectedDay] ?? [];
+
+  print('Selected day: $selectedDay');
+  print('Events for $selectedDay: $events');
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          'Events on ${DateFormat('MM/dd/yyyy').format(selectedDay)}',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+      if (events.isNotEmpty)
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: events.length,
+            itemBuilder: (context, index) {
+              final event = events[index];
+              return ListTile(
+                title: Text(event.eventName),
+                subtitle: Text(event.description),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventPage(
+                        title: event.eventName,
+                        image: event.image ?? '',
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      if (events.isEmpty)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Events on ${DateFormat('MM/dd/yyyy').format(_selectedDay)}',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            'No events on ${DateFormat('MM/dd/yyyy').format(selectedDay)}',
+            style: TextStyle(fontSize: 16),
           ),
         ),
-        // ListView to display the list of events
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(events[index].title),
-              subtitle: Text(events[index].description),
-              onTap: () {
-                // Navigate to the EventPage when an event is tapped
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EventPage(
-                    title: events[index].title,
-                    image: events[index].imageUrl,
-                  )),
-                );
-              },
-            );
-          },
-        ),
-      ],
-    );
-  }
+    ],
+  );
 }
-
-// Class representing an event
-class Event {
-  final String title;
-  final String description;
-  final String imageUrl;
-
-  Event(this.title, this.description, this.imageUrl);
 }
