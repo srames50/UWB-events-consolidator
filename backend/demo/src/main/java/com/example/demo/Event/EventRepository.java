@@ -45,4 +45,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE :date BETWEEN e.startDate AND e.endDate")
     Optional<List<Event>> getEventsByDate(LocalDate date);
 
+    /**
+     * Query that gets events with an exact match to the event in the database
+     * @param name Name of event in search
+     * @return Event if it exists
+     */
+    @Query("SELECT e FROM Event e where e.eventName = :name")
+    Optional<Event> getEventByEventName(String name);
+
 }

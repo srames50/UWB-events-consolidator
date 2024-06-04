@@ -101,10 +101,21 @@ public class EventService {
         catch (Exception e){
             throw new IllegalArgumentException("Must enter a valid date");
         }
+    }
 
-
-
-
+    /**
+     * Finds events by its name
+     * @param name Name of event from search bar
+     * @return Event if it exists
+     * @throws NullPointerException If there is no match
+     */
+    public Event getByName(String name) throws NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.getEventByEventName(name);
+        if(possibleEvent.isPresent()){
+            return possibleEvent.get();
+        }else{
+            throw new NullPointerException("No event found");
+        }
     }
 
 }

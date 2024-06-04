@@ -59,6 +59,17 @@ public class EventController {
         return eventService.getEventsByDate(month,day,year);
     }
 
+    /**
+     *End Point to find event by Name
+     * @param name Name of search
+     * EXAMPLE http://localhost:8080/event/byNameExact/Rahul_Test_Event1 (Make sure the event name exists in database)
+     * @return event if found
+     */
+    @GetMapping("byNameExact/{name}")
+    public Event getByName(@PathVariable String name){
+        return eventService.getByName(name);
+    }
+
 
 
     /**
