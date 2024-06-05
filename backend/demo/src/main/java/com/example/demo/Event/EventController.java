@@ -1,8 +1,10 @@
 package com.example.demo.Event;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -85,7 +87,7 @@ public class EventController {
      * @param id id of the event
      * TO TEST SEND REQUEST LIKE THIS:
      *
-     * $imageUrl = "https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upsc/media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg"
+     *  $imageUrl = "https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg"
      * Invoke-RestMethod -Uri "http://localhost:8080/event/editImage/6" -Method Post -Body @{ newImage = $imageUrl } -ContentType "application/x-www-form-urlencoded"
      *
      * @param newImage new image for the event
@@ -95,6 +97,52 @@ public class EventController {
         eventService.editImage(id,newImage);
     }
 
+    /**
+     * Endpoint for editing the name of an event
+     *
+     * @param id id of the event
+     * @param eventName new name for the event
+     */
+    @PostMapping("/editEventName/{id}")
+    public void editEventName(@PathVariable Integer id, @RequestParam String eventName) {
+        eventService.editEventName(id, eventName);
+    }
+
+    /**
+     * Endpoint for editing the description of an event
+     *
+     * @param id           id of the event
+     * @param description new description for the event
+     */
+    @PostMapping("/editDescription/{id}")
+    public void editDescription(@PathVariable Integer id, @RequestParam String description) {
+        eventService.editDescription(id, description);
+    }
+
+
+    /**
+     * Endpoint for editing the start date of an event
+     *
+     * @param id id of the event
+     * @param startDate new start date for the event
+     */
+    @PostMapping("/editStartDate/{id}")
+    public void editStartDate(@PathVariable Integer id,@RequestParam String startDate ) {
+        eventService.editStartDate(id, startDate);
+    }
+
+    /**
+     * Endpoint for editing the end date of an event
+     * USE:
+     *
+     * date = Get-Date -Date "June 6 2024" -Format "MMMM d yyyy"
+     * @param id id of the event
+     * @param endDate new end date for the event
+     */
+    @PostMapping("/editEndDate/{id}")
+    public void editEndDate(@PathVariable Integer id, @RequestParam String endDate) {
+        eventService.editEndDate(id, endDate);
+    }
 
     /**
      * Endpoint to register a new event.
@@ -106,4 +154,8 @@ public class EventController {
     public void registerEvent(@RequestBody Event event) {
         eventService.addNewEvent(event);
     }
+
+
+
+
 }

@@ -151,4 +151,84 @@ public class EventService {
         }
     }
 
+    /**
+     * Edits the name of the Event
+     * @param id ID of the event getting edited
+     * @param name New name of the event
+     * @throws NullPointerException if no event with the id exits
+     */
+    public void editEventName(Integer id, String name) throws NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            Event event = possibleEvent.get();
+            event.setEventName(name);
+            eventRepository.save(event);
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+    }
+
+    /**
+     * Edits the description of the event
+     * @param id the ID of the event getting edited
+     * @param description new description of the event
+     * @throws NullPointerException if there is no event with the id
+     */
+    public void editDescription(Integer id, String description) throws NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            Event event = possibleEvent.get();
+            event.setDescription(description);
+            eventRepository.save(event);
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+
+    }
+
+    /**
+     * Edits the start date of the event
+     * @param id ID of the event being edited
+     * @param newStart new start date of the event
+     * @throws NullPointerException if there is no event with the id
+     * @throws IllegalArgumentException if date is not valid
+     */
+    public void editStartDate(Integer id, String newStart) throws NullPointerException,IllegalArgumentException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            Event event = possibleEvent.get();
+            try {
+                String[] dateInfo = newStart.split("-");
+                LocalDate start = LocalDate.of(Integer.parseInt(dateInfo[0]),Integer.parseInt(dateInfo[1]),Integer.parseInt(dateInfo[2]));
+                event.setStartDate(start);
+                //TODO EDIT START Time to have same date
+                eventRepository.save(event);
+            }catch (Exception e){
+                throw new IllegalArgumentException("Enter a valid date");
+            }
+
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+    }
+
+    /**
+     * Edits the end date of the event
+     * @param id id of the event being searched for
+     * @param endDate new end date of the event
+     * @throws NullPointerException if there is no event with the id
+     */
+    public void editEndDate(Integer id, String endDate) throws NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            //TODO Fix method
+            Event event = possibleEvent.get();
+            event.setEndDate(LocalDate.now());
+            eventRepository.save(event);
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+    }
+
+
 }
