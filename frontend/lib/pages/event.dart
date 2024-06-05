@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_typing_uninitialized_variables
 import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart';
+import 'package:frontend/pages/calendar.dart';
+import 'package:frontend/pages/user_events.dart';
 import '../components/drawer.dart';
 import './event.dart';
 import './eventsearch.dart';
@@ -21,8 +23,9 @@ Future<Event?> _fetchEvent(String jsonString, String name) async {
 class EventPage extends StatefulWidget {
   final String title;
   final String image;
+  final String navTo;
 
-  const EventPage({super.key, required this.title, required this.image});
+  EventPage({super.key, required this.title, required this.image, required this.navTo});
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -83,9 +86,19 @@ class _EventPageState extends State<EventPage> {
             return IconButton(
               icon: const Icon(Icons.chevron_left),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomePage())
-                );
+                if (widget.navTo == 'home') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => HomePage())
+                  );
+                } else if (widget.navTo == 'userEvents') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => UserEventsPage())
+                  );
+                } else if (widget.navTo == 'calendar') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => CalendarPage())
+                  );
+                }
               },
             );
           },

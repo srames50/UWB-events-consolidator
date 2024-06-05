@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/event.dart'; // Import EventPage here
+import './event.dart';
 
 // This allows the user to search for events from a predefined list and navigate to the event details page.
 class EventSearchPage extends StatefulWidget {
@@ -70,6 +70,7 @@ class _EventSearchPageState extends State<EventSearchPage> {
                           builder: (context) => EventPage(
                             title: _filteredEvents[index],
                             image: 'https://example.com/image_url', // Replace with actual image URL
+                            navTo: 'home',
                           ),
                         ),
                       );

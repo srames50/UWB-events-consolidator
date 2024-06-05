@@ -119,6 +119,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   MaterialPageRoute(builder: (context) => EventPage(
                     title: events[index].title,
                     image: events[index].imageUrl,
+                    navTo: 'calendar',
                   )),
                 );
               },
