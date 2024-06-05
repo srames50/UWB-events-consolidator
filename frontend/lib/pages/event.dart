@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart';
 import '../components/drawer.dart';
@@ -8,11 +9,21 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import './home.dart';
 
+/// Fetches an event by its name from a JSON string.
+///
+/// The JSON string is parsed into a list of dynamic objects, which are then
+/// mapped to `Event` objects. The function returns the first event that matches
+/// the given name.
+///
+/// Args:
+///   jsonString (String): The JSON string containing event data.
+///   name (String): The name of the event to fetch.
+///
+/// Returns:
+///   Future<Event?>: A future that resolves to the matching event, or null if not found.
 Future<Event?> _fetchEvent(String jsonString, String name) async {
-  // Get the json data by parsing the passed-in string
   final List<dynamic> jsonData = jsonDecode(jsonString);
 
-  // Find and return the first event that matches the given name
   Event? event;
   try {
     event = jsonData
@@ -25,7 +36,7 @@ Future<Event?> _fetchEvent(String jsonString, String name) async {
   return event;
 }
 
-
+/// Stateful widget for displaying an event's details.
 class EventPage extends StatefulWidget {
   final String title;
   final String image;
@@ -51,13 +62,17 @@ class _EventPageState extends State<EventPage> {
     loadEvent();
   }
 
+  /// Loads the event data from the API and updates the state.
+  ///
+  /// This method sets the loading state to true, fetches all events from the API,
+  /// finds the event matching the title, and updates the state with the event's details.
+  /// If an error occurs, it updates the error message in the state.
   void loadEvent() async {
     setState(() {
       _isLoading = true;
       _error = "";
     });
     try {
-      // Get the data string and pass it into fetchEvents
       final data = await apiService.getAllEvents();
       final event = await _fetchEvent(data, widget.title);
       setState(() {
@@ -147,7 +162,6 @@ class _EventPageState extends State<EventPage> {
   );
 }}
 
-
 class Event {
   final int id;
   final String eventName;
@@ -173,6 +187,17 @@ class Event {
     required this.signedUpUsers,
   });
 
+  /// Creates an `Event` object from a JSON map.
+  ///
+  /// The method attempts to parse the JSON map into an `Event` object.
+  /// If parsing fails, it prints an error and returns an `Event` object
+  /// with default values.
+  ///
+  /// Args:
+  ///   json (Map<String, dynamic>): The JSON map containing event data.
+  ///
+  /// Returns:
+  ///   Event: An `Event` object created from the JSON map.
   factory Event.fromJson(Map<String, dynamic> json) {
   try {
     return Event(
