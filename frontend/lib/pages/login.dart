@@ -1,16 +1,70 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_typing_uninitialized_variables
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/home.dart';
+import 'package:frontend/pages/authentication_service.dart';
 
 class LoginPage extends StatefulWidget {
-
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthenticationService _authService = AuthenticationService();
+  bool _isLoading = false;
+
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    bool success = await _authService.login(
+      _usernameController.text,
+      _passwordController.text,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (success) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed. Please try again.')),
+      );
+    }
+  }
+
+  void _register() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    bool success = await _authService.register(
+      _usernameController.text,
+      _passwordController.text,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (success) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed. Please try again.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,35 +82,43 @@ class _LoginPageState extends State<LoginPage> {
                 height: 200,
               ),
               TextField(
+                controller: _usernameController,
                 decoration: InputDecoration(
                   hintText: 'Username',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Round the edges
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
               ),
-              SizedBox(height: 10), // Space between the two input fields
+              SizedBox(height: 10),
               TextField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Round the edges
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 10), // Space between the bottom input field and login button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const HomePage())
-                    );
-                },
+              SizedBox(height: 10),
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                onPressed: _login,
                 child: Text('Log In'),
+              ),
+              SizedBox(height: 10),
+              _isLoading
+                  ? SizedBox()
+                  : ElevatedButton(
+                onPressed: _register,
+                child: Text('Register'),
               ),
             ],
           ),
-        )
-    ));  
+        ),
+      ),
+    );
   }
 }
