@@ -134,4 +134,21 @@ public class EventService {
 
     }
 
+    /**
+     * Logic for editing the image of an event
+     * @param id id of the event image
+     * @param newImage new image of the event
+     * @throws NullPointerException if the event does not exist
+     */
+    public void editImage(Integer id, String newImage) throws NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            Event event = possibleEvent.get();
+            event.setImage(newImage);
+            eventRepository.save(event);
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+    }
+
 }

@@ -80,6 +80,21 @@ public class EventController {
         return eventService.getByNamePartial(search);
     }
 
+    /**
+     * Endpoint for editing the image of an event
+     * @param id id of the event
+     * TO TEST SEND REQUEST LIKE THIS:
+     *
+     * $imageUrl = "https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upsc/media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg"
+     * Invoke-RestMethod -Uri "http://localhost:8080/event/editImage/6" -Method Post -Body @{ newImage = $imageUrl } -ContentType "application/x-www-form-urlencoded"
+     *
+     * @param newImage new image for the event
+     */
+    @PostMapping("editImage/{id}")
+    public void editImage(@PathVariable Integer id, @RequestParam String newImage){
+        eventService.editImage(id,newImage);
+    }
+
 
     /**
      * Endpoint to register a new event.

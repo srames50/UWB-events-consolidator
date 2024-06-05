@@ -61,4 +61,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE e.eventName LIKE %:phrase%")
     Optional<List<Event>> getEventsWithPhrase(String phrase);
 
+
 }
