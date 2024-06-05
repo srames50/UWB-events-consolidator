@@ -135,13 +135,39 @@ public class EventController {
      * Endpoint for editing the end date of an event
      * USE:
      *
-     * date = Get-Date -Date "June 6 2024" -Format "MMMM d yyyy"
+     * date = "YYYY-MM-DD"
+     * Invoke-RestMethod -Uri "http://localhost:8080/event/editStartDate/6" -Method Post -Body @{ startDate = $date } -ContentType "application/x-www-form-urlencoded"
      * @param id id of the event
      * @param endDate new end date for the event
      */
     @PostMapping("/editEndDate/{id}")
     public void editEndDate(@PathVariable Integer id, @RequestParam String endDate) {
         eventService.editEndDate(id, endDate);
+    }
+
+    /**
+     * Endpoint for editing start time
+     * USE:
+     *
+     * $time = "00:00:01"
+     * Invoke-RestMethod -Uri "http://localhost:8080/event/editStartTime/6" -Method Post -Body @{ startTime = $time } -ContentType "application/x-www-form-urlencoded"
+     *
+     * @param id id of the event being edited
+     * @param startTime new start time of event
+     */
+    @PostMapping("editStartTime/{id}")
+    public void editStartTime(@PathVariable Integer id, @RequestParam String startTime) {
+        eventService.editStartTime(id, startTime);
+    }
+
+    /**
+     * Endpoint for editing end time
+     * @param id of the event being edited
+     * @param endTime new end time of the event
+     */
+    @PostMapping("editEndTime/{id}")
+    public void editEndTime(@PathVariable Integer id, @RequestParam String endTime) {
+        eventService.editEndTime(id,endTime);
     }
 
     /**

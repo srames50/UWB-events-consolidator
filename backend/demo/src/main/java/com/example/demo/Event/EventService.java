@@ -201,10 +201,13 @@ public class EventService {
                 String[] dateInfo = newStart.split("-");
                 LocalDate start = LocalDate.of(Integer.parseInt(dateInfo[0]),Integer.parseInt(dateInfo[1]),Integer.parseInt(dateInfo[2]));
                 event.setStartDate(start);
-                //TODO EDIT START Time to have same date
+                LocalDateTime oldStartTime = event.getStartTime();
+                LocalDateTime newStartTime = LocalDateTime.of(start.getYear(),start.getMonth(),start.getDayOfMonth(),
+                        oldStartTime.getHour(),oldStartTime.getMinute(),oldStartTime.getSecond());
+                event.setStartTime(newStartTime);
                 eventRepository.save(event);
             }catch (Exception e){
-                throw new IllegalArgumentException("Enter a valid date");
+                throw new IllegalArgumentException("Enter a valid date"+ e.getMessage());
             }
 
         }else{
@@ -221,10 +224,73 @@ public class EventService {
     public void editEndDate(Integer id, String endDate) throws NullPointerException{
         Optional<Event> possibleEvent = eventRepository.findById(id);
         if (possibleEvent.isPresent()){
-            //TODO Fix method
             Event event = possibleEvent.get();
-            event.setEndDate(LocalDate.now());
-            eventRepository.save(event);
+            try {
+               String[] dateInfo = endDate.split("-");
+               LocalDate end = LocalDate.of(Integer.parseInt(dateInfo[0]),Integer.parseInt(dateInfo[1]),Integer.parseInt(dateInfo[2]));
+               event.setEndDate(end);
+              LocalDateTime oldEndTime = event.getEndTime();
+               LocalDateTime newEndTime = LocalDateTime.of(Integer.parseInt(dateInfo[0]),Integer.parseInt(dateInfo[1]),Integer.parseInt(dateInfo[2]),
+                       oldEndTime.getHour(),oldEndTime.getMinute(),oldEndTime.getHour());
+               event.setEndTime(newEndTime);
+               eventRepository.save(event);
+            }catch (Exception e){
+                throw new IllegalArgumentException("Enter a valid date"+ e.getMessage());
+            }
+
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+    }
+
+    /**
+     * Edits Start Time of event
+     * @param startTime New start time of event
+     * @param id id of the event being searched for
+     * @throws IllegalArgumentException If time is not valid
+     * @throws NullPointerException if event does not exist
+     */
+    public void editStartTime(Integer id , String startTime) throws IllegalArgumentException, NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            Event event = possibleEvent.get();
+            LocalDate startDate = event.getStartDate();
+            String[] time = startTime.split(":");
+            try {
+                LocalDateTime newTime = LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(),
+                        Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
+                event.setStartTime(newTime);
+                eventRepository.save(event);
+            }catch (Exception e){
+                throw new IllegalArgumentException("Enter a valid date"+ e.getMessage());
+            }
+
+        }else{
+            throw new NullPointerException("Event not found");
+        }
+    }
+
+    /**
+     * Edits the end time of the event
+     * @param id of event getting edited
+     * @param endTime new end time of event
+     * @throws IllegalArgumentException if time is not valid
+     * @throws NullPointerException if event does not exist
+     */
+    public void editEndTime(Integer id,String endTime) throws IllegalArgumentException, NullPointerException{
+        Optional<Event> possibleEvent = eventRepository.findById(id);
+        if (possibleEvent.isPresent()){
+            Event event = possibleEvent.get();
+            LocalDate endDate = event.getEndDate();
+            String[] time = endTime.split(":");
+            try {
+                LocalDateTime newTime = LocalDateTime.of(endDate.getYear(),endDate.getMonth(),endDate.getDayOfMonth(),
+                        Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
+                event.setEndTime(newTime);
+                eventRepository.save(event);
+            }catch (Exception e){
+                throw new IllegalArgumentException("Enter a valid date"+ e.getMessage());
+            }
         }else{
             throw new NullPointerException("Event not found");
         }
