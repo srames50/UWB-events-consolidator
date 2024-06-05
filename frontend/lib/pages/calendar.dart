@@ -6,40 +6,34 @@ import './event.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
+// Function to fetch events from the API and return them as a map of DateTime to a list of events.
 Future<Map<DateTime, List<Event>>> _fetchEvents() async {
-  final apiService = ApiService('http://localhost:8080');
+  final apiService = ApiService('http://localhost:8080'); // Initialize ApiService with base URL
   try {
-    final data = await apiService.getAllEvents();
-    final List<dynamic> jsonData = jsonDecode(data);
-    Map<DateTime, List<Event>> eventsMap = {};
+    final data = await apiService.getAllEvents(); // Fetch all events from the API
+    final List<dynamic> jsonData = jsonDecode(data); // Decode JSON data from the response
+    Map<DateTime, List<Event>> eventsMap = {}; // Initialize an empty map to store events
     for (var json in jsonData) {
       Event? event;
-    try {
-      event = Event.fromJson(json);
-      print('Parsed event: ${event?.eventName ?? 'Unknown'} - $event'); // Include event name in debug print
-    } catch (e) {
-      print('Error parsing event: $e');
-    }
-      if (event != null && event.startDate != null && event.startTime != null) {
-        DateTime fullStartDateTime = DateTime(
-          event.startDate!.year,
-          event.startDate!.month,
-          event.startDate!.day,
-          event.startTime!.hour,
-          event.startTime!.minute,
-        );
-        if (eventsMap.containsKey(fullStartDateTime)) {
-          eventsMap[fullStartDateTime]!.add(event);
+      try {
+        event = Event.fromJson(json); // Parse each event JSON into an Event object
+      } catch (e) {
+        print('Error parsing event: $e'); // Error handling for JSON parsing
+      }
+      if (event != null && event.startDate != null) {
+        // Check if the event and its start date are not null
+        DateTime dateOnly = DateTime(event.startDate!.year, event.startDate!.month, event.startDate!.day);
+        if (eventsMap.containsKey(dateOnly)) {
+          eventsMap[dateOnly]!.add(event); // Add event to existing date entry
         } else {
-          eventsMap[fullStartDateTime] = [event];
+          eventsMap[dateOnly] = [event]; // Create a new date entry with the event
         }
       }
     }
-    print('Events map: $eventsMap'); // Debug: Print events map
-    return eventsMap;
+    return eventsMap; // Return the map of events
   } catch (e) {
-    print('Error fetching events: $e');
-    return {};
+    print('Error fetching events: $e'); // Error handling for API fetch
+    return {}; // Return an empty map if an error occurs
   }
 }
 
@@ -50,28 +44,27 @@ class CalendarPage extends StatefulWidget {
   _CalendarPageState createState() => _CalendarPageState();
 }
 
-// This class represents the Calendar page of the application.
-// It displays a calendar with events and allows the user to navigate through different dates and view events on those dates.
 class _CalendarPageState extends State<CalendarPage> {
-  late CalendarFormat _calendarFormat;
-  late DateTime _focusedDay;
-  late DateTime _selectedDay;
-  Map<DateTime, List<Event>> _events = {};
+  late CalendarFormat _calendarFormat; // Format of the calendar (month, week, etc.)
+  late DateTime _focusedDay; // Currently focused day
+  late DateTime _selectedDay; // Currently selected day
+  Map<DateTime, List<Event>> _events = {}; // Map of events to display
 
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    _focusedDay = DateTime(now.year, now.month, now.day);
-    _selectedDay = _focusedDay;
-    _calendarFormat = CalendarFormat.month;
-    _fetchAndSetEvents();
+    final now = DateTime.now(); // Get current date and time
+    _focusedDay = DateTime(now.year, now.month, now.day); // Set initial focused day to today
+    _selectedDay = _focusedDay; // Set initial selected day to today
+    _calendarFormat = CalendarFormat.month; // Set initial calendar format to month
+    _fetchAndSetEvents(); // Fetch and set events on initialization
   }
 
+  // Fetch events and update the state
   Future<void> _fetchAndSetEvents() async {
-    final events = await _fetchEvents();
+    final events = await _fetchEvents(); // Fetch events from the API
     setState(() {
-      _events = events;
+      _events = events; // Update the state with fetched events
     });
   }
 
@@ -79,97 +72,99 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: const Text('Calendar'), // Title of the app bar
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.menu), // Menu icon button
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Scaffold.of(context).openDrawer(); // Open drawer on button press
               },
             );
           },
         ),
       ),
-      drawer: AppDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2023, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              onDaySelected: (selectedDay, focusedDay) {
+      drawer: AppDrawer(), // Custom drawer widget
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TableCalendar(
+            firstDay: DateTime.utc(2023, 1, 1), // First day of the calendar
+            lastDay: DateTime.utc(2030, 12, 31), // Last day of the calendar
+            focusedDay: _focusedDay, // Focused day of the calendar
+            calendarFormat: _calendarFormat, // Format of the calendar
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day), // Predicate to determine the selected day
+            onDaySelected: (selectedDay, focusedDay) {
               setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-                _fetchAndSetEvents(); // Refresh events when a new day is selected
+                _selectedDay = selectedDay; // Update selected day
+                _focusedDay = focusedDay; // Update focused day
               });
             },
-              eventLoader: (day) => _events[day] ?? [],
-            ),
-            _buildEvents(),
-          ],
-        ),
+            eventLoader: (day) {
+              final dateOnly = DateTime(day.year, day.month, day.day); // Normalize day to date only
+              return _events[dateOnly] ?? []; // Load events for the selected day
+            },
+          ),
+          Expanded(child: _buildEvents()), // Expanded widget to build event list
+        ],
       ),
     );
   }
 
-Widget _buildEvents() {
-  final selectedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-  final events = _events[selectedDay] ?? [];
+  // Build the list of events for the selected day
+  Widget _buildEvents() {
+    final selectedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day); // Normalize selected day to date only
+    final events = _events[selectedDay] ?? []; // Get events for the selected day
 
-  print('Selected day: $selectedDay');
-  print('Events for $selectedDay: $events');
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(
-          'Events on ${DateFormat('MM/dd/yyyy').format(selectedDay)}',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
-      if (events.isNotEmpty)
-        Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              final event = events[index];
-              return ListTile(
-                title: Text(event.eventName),
-                subtitle: Text(event.description),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EventPage(
-                        title: event.eventName,
-                        image: event.image ?? '',
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      if (events.isEmpty)
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'No events on ${DateFormat('MM/dd/yyyy').format(selectedDay)}',
-            style: TextStyle(fontSize: 16),
+            'Events on ${DateFormat('MM/dd/yyyy').format(selectedDay)}', // Display the selected date
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-    ],
-  );
-}
+        if (events.isNotEmpty)
+          Expanded(
+            child: ListView.builder(
+              itemCount: events.length, // Number of events
+              itemBuilder: (context, index) {
+                final event = events[index]; // Event at the current index
+                return ListTile(
+                  leading: Icon(Icons.event, color: Colors.green), // Icon for the event
+                  title: Text(
+                    event.eventName,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),  
+                  subtitle: Text(
+                    '${DateFormat('MMM dd, yyyy').format(event.startDate!)} at ${DateFormat('h:mm a').format(event.startTime!)}',
+                  ), // Event description and date/time
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventPage(
+                          title: event.eventName, // Pass event name to EventPage
+                          image: event.image ?? '', // Pass event image to EventPage
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'No events on ${DateFormat('MM/dd/yyyy').format(selectedDay)}', // Message for no events
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+      ],
+    );
+  }
 }
