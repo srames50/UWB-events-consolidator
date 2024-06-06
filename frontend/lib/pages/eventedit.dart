@@ -26,6 +26,8 @@ class _EventEditState extends State<EventEdit> {
   // ignore: prefer_final_fields
   String _eventImage =
       'https://www.investopedia.com/thmb/_EUeiZWojyM4VEYLSfQ5AMbrzf4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-1503239849-0dc8617d35594774b51c998694997431.jpg';
+  String _description =
+      "Yo this event is so lit brah if I were the event people I would tots put a description here like no cap brah";
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,7 @@ class _EventEditState extends State<EventEdit> {
       ),
       body: Column(
         children: [
+          // EDIT BUTTON
           Padding(
             padding: const EdgeInsets.only(
               left: 20.0,
@@ -68,14 +71,11 @@ class _EventEditState extends State<EventEdit> {
               bottom: 10.0,
             ),
             child: ElevatedButton(
+              //POP UP
               onPressed: () async {
-                final name = await openDialog();
-                if (name == null || name.isEmpty) return;
-                setState(() => this._eventImage = name);
-                _eventImage = controller.text;
-                print(_eventImage);
-                // Replace with Pop UP
-            
+                final eventImage = await openDialogImage();
+                if (eventImage == null || eventImage.isEmpty) return;
+                setState(() => this._eventImage = eventImage);
               },
               child: const Text(
                 "Edit Image",
@@ -111,22 +111,36 @@ class _EventEditState extends State<EventEdit> {
               textAlign: TextAlign.center,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(
-              left: 20.0,
-              top: 10.0,
-              right: 20.0,
-              bottom: 10.0,
-            ),
-            child: Text(
-              "Tap to Edit Description",
-              style: TextStyle(
-                fontSize: 17,
-                fontFamily: 'Inter',
+          Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                top: 10.0,
+                right: 20.0,
+                bottom: 10.0,
               ),
-              textAlign: TextAlign.center,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    final description = await openDialogDescription();
+                    if (description == null || description.isEmpty) return;
+                    setState(() => this._description = description);
+                  },
+                  child: const Text(
+                    "Edit Description",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ))),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Text(
+              _description,
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.black,
+              ),
             ),
-          ),
+          )
         ],
       ),
       floatingActionButton: Row(
@@ -149,7 +163,7 @@ class _EventEditState extends State<EventEdit> {
     );
   }
 
-  Future<String?> openDialog() => showDialog<String>(
+  Future<String?> openDialogImage() => showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
           title: Text("New Image"),
@@ -159,12 +173,41 @@ class _EventEditState extends State<EventEdit> {
             controller: controller,
           ),
           actions: [
-            TextButton(onPressed: submitImage, child: const Text("SAVE"))
+            TextButton(onPressed: submitImage, child: const Text("SAVE")),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Close"))
           ],
         ),
       );
 
   void submitImage() {
+    Navigator.of(context).pop(controller.text);
+  }
+
+  Future<String?> openDialogDescription() => showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("New Description"),
+          content: TextField(
+            autofocus: true,
+            decoration: InputDecoration(hintText: "Enter Description"),
+            controller: controller,
+          ),
+          actions: [
+            TextButton(onPressed: submitDescription, child: const Text("SAVE")),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Close"))
+          ],
+        ),
+      );
+
+  void submitDescription() {
     Navigator.of(context).pop(controller.text);
   }
 }
