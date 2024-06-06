@@ -2,14 +2,20 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AuthenticationService {
-  static const String baseUrl = 'http://localhost:8080'; // Connecting to url
+  static const String baseUrl = 'http://localhost:8080'; // Connecting to URL
 
-  Future<bool> register(String username, String password) async {
+  /**
+   * Registers a new user or logs in if the user already exists.
+   * @param username The username of the user.
+   * @param password The password of the user.
+   * @return A boolean indicating success or failure.
+   */
+  Future<String> register(String username, String password) async {
     // Check if the username and password match a record in the database
-    bool loginResult = await login(username, password);
+    bool loginResult = await login(username, password) == 'success';
     if (loginResult) {
       // If login successful, return true to indicate successful login without registration
-      return true;
+      return 'success';
     }
 
     // Fetch all users from the database
@@ -26,15 +32,7 @@ class AuthenticationService {
       // Check if the username already exists
       bool usernameExists = users.any((user) => user['userName'] == username);
       if (usernameExists) {
-        // Username exists, now check if the password matches
-        var userData = users.firstWhere((user) => user['userName'] == username);
-        if (userData['password'] == password) {
-          // Username and password match, return true to indicate successful login
-          return true;
-        } else {
-          // Username exists but password doesn't match, return false
-          return false;
-        }
+        return 'username_exists'; // Username already exists
       } else {
         // Username doesn't exist, proceed with registration
         final response = await http.post(
@@ -51,19 +49,25 @@ class AuthenticationService {
 
         if (response.statusCode == 200) {
           // Registration successful
-          return true;
+          return 'success';
         } else {
           // Registration failed
-          return false;
+          return 'registration_failed';
         }
       }
     } else {
       // Failed to fetch users from the database
-      return false;
+      return 'request_failed';
     }
   }
 
-  Future<bool> login(String username, String password) async {
+  /**
+   * Logs in a user by checking the username and password.
+   * @param username The username of the user.
+   * @param password The password of the user.
+   * @return A string indicating the result of the login attempt.
+   */
+  Future<String> login(String username, String password) async {
     final response = await http.get(
       Uri.parse('$baseUrl/user/allUsers'), // Endpoint to view all users
       headers: <String, String>{
@@ -74,19 +78,29 @@ class AuthenticationService {
     if (response.statusCode == 200) {
       List<dynamic> users = jsonDecode(response.body);
       for (var user in users) {
-        if (user['userName'] == username && user['password'] == password) {
-          return true;
+        if (user['userName'] == username) {
+          if (user['password'] == password) {
+            return 'success';
+          } else {
+            return 'invalid_password';
+          }
         }
       }
-      return false; // If no matching user found
+      return 'username_not_exist'; // If no matching user found
     } else {
-      return false; // Request failed
+      return 'request_failed'; // Request failed
     }
   }
 
+  /**
+   * Retrieves user data for a given username.
+   * @param username The username of the user.
+   * @return A map containing user data.
+   * @throws Exception if the request fails.
+   */
   Future<Map<String, dynamic>> getUserData(String username) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/user/$username'), //Endpoint to get user data
+      Uri.parse('$baseUrl/user/$username'), // Endpoint to get user data
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
