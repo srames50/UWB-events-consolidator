@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/adminedit.dart';
 
 class EventEdit extends StatefulWidget {
-  const EventEdit({super.key});
+  const EventEdit({Key? key}) : super(key: key);
 
   @override
   State<EventEdit> createState() => _EventEditState();
 }
 
 class _EventEditState extends State<EventEdit> {
-  String _title = "Tap To Select Event";
+  String _title = "Select Event";
 
   String _selectedEventName = 'Select Event To Edit';
   String _eventImage =
@@ -20,331 +21,92 @@ class _EventEditState extends State<EventEdit> {
   String _startTime = "08:30:00";
   String _endTime = "12:00:00";
 
+  List<String> _events = [
+    'Month, Day: Event 1',
+    'Month, Day: Event 2',
+    'Month, Day: Event 3',
+    'Month, Day: Event 4',
+    'Month, Day: Event 5',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: PopupMenuButton<String>(
-          child: Center(
-            child: Text(
-              _title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-          onSelected: (String value) {
-            setState(() {
-              _selectedEventName = value;
-            });
-          },
-          itemBuilder: (context) {
-            return List.generate(5, (index) {
-              return PopupMenuItem<String>(
-                value: 'Event $index',
-                child: Text('Event $index'),
-              );
-            });
-          },
-        ),
+        title: Text(_title),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                  child: Center(
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      _selectedEventName,
-                      style: const TextStyle(
-                        fontSize: 18,
+                      'Other Events:',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: Colors.black,
+                        fontSize: 17,
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final name = await openDialogName();
-                      if (name == null || name.isEmpty) return;
-                      setState(() => _selectedEventName = name);
-                    },
-                    child: const Text(
-                      "Edit Name",
-                      style: TextStyle(fontSize: 15, color: Colors.black),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 295,
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: _events.length,
+                itemBuilder: (context, index) {
+                  final eventName = _events[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15.0),
+                            child: Text(
+                              eventName,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ),
+                        FloatingActionButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AdminEventEdit(eventName: eventName),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.check_box_outlined),
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          mini: true,
+                        ),
+                      ],
                     ),
-                  ),
-                )
-              ],
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final eventImage = await openDialogImage();
-                if (eventImage == null || eventImage.isEmpty) return;
-                setState(() => _eventImage = eventImage);
-              },
-              child: const Text(
-                "Edit Image",
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Image.network(_eventImage, height: 150, fit: BoxFit.cover),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                "$_startDate - $_endDate",
-                style: const TextStyle(fontSize: 16, color: Colors.black),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    final date = await openDialogDate();
-                    if (date == null || date.isEmpty) return;
-                    setState(() => _startDate = date);
-                  },
-                  child: const Text(
-                    "Edit Start Date",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
-                  ),
-                ),
-                SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () async {
-                    final date = await openDialogDate();
-                    if (date == null || date.isEmpty) return;
-                    setState(() => _endDate = date);
-                  },
-                  child: const Text(
-                    "Edit End Date",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                "$_startTime - $_endTime",
-                style: const TextStyle(fontSize: 16, color: Colors.black),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    final time = await openDialogTime();
-                    if (time == null || time.isEmpty) return;
-                    setState(() => _startTime = time);
-                  },
-                  child: const Text(
-                    "Edit Start Time",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
-                  ),
-                ),
-                SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () async {
-                    final time = await openDialogTime();
-                    if (time == null || time.isEmpty) return;
-                    setState(() => _endTime = time);
-                  },
-                  child: const Text(
-                    "Edit End Time",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  final description = await openDialogDescription();
-                  if (description == null || description.isEmpty) return;
-                  setState(() => _description = description);
+                  );
                 },
-                child: const Text(
-                  "Edit Description",
-                  style: TextStyle(fontSize: 15, color: Colors.black),
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Text(
-                _description,
-                style: const TextStyle(fontSize: 15, color: Colors.black),
-                textAlign: TextAlign.center,
               ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text(
-            "Tap to save changes!",
-            style: TextStyle(fontSize: 15, fontFamily: 'Inter'),
-          ),
-          const SizedBox(width: 10),
-          FloatingActionButton(
-            onPressed: () {
-              // SAVE EVENT WITH POST REQUEST
-              Navigator.pop(context);
-            },
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> openDialogImage() {
-    TextEditingController imageController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Image"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter image URL"),
-          controller: imageController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(imageController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> openDialogDescription() {
-    TextEditingController descriptionController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Description"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter Description"),
-          controller: descriptionController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(descriptionController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> openDialogDate() {
-    TextEditingController dateController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Date (yyyy-mm-dd)"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter New Date"),
-          controller: dateController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(dateController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> openDialogTime() {
-    TextEditingController timeController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Time (hh:mm:ss)"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter New Time"),
-          controller: timeController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(timeController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  Future<String?> openDialogName() {
-    TextEditingController nameController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Name"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter New Name"),
-          controller: nameController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(nameController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
       ),
     );
   }
