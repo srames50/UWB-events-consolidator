@@ -8,21 +8,9 @@ class EventEdit extends StatefulWidget {
 }
 
 class _EventEditState extends State<EventEdit> {
-  late TextEditingController controller;
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController();
-  }
+  String _title = "Tap To Select Event";
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  String _selectedEvent =
-      'Tap To Select Event To Edit'; // Text of title/pop up button
+  String _selectedEventName = 'Select Event To Edit';
   String _eventImage =
       'https://www.investopedia.com/thmb/_EUeiZWojyM4VEYLSfQ5AMbrzf4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-1503239849-0dc8617d35594774b51c998694997431.jpg';
   String _description =
@@ -37,23 +25,20 @@ class _EventEditState extends State<EventEdit> {
     return Scaffold(
       appBar: AppBar(
         title: PopupMenuButton<String>(
-          //Creates pop up buttton
           child: Center(
             child: Text(
-              _selectedEvent,
+              _title,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.black),
             ),
           ),
           onSelected: (String value) {
-            // Changes values when clicked.
             setState(() {
-              _selectedEvent = 'Editing $value';
+              _selectedEventName = value;
             });
           },
           itemBuilder: (context) {
             return List.generate(5, (index) {
-              // Creates events will be replaced by actual user events
               return PopupMenuItem<String>(
                 value: 'Event $index',
                 child: Text('Event $index'),
@@ -63,143 +48,163 @@ class _EventEditState extends State<EventEdit> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // EDIT Image BUTTON
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 20.0,
-              top: 10.0,
-              right: 20.0,
-              bottom: 10.0,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                  child: Center(
+                    child: Text(
+                      _selectedEventName,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final name = await openDialogName();
+                      if (name == null || name.isEmpty) return;
+                      setState(() => _selectedEventName = name);
+                    },
+                    child: const Text(
+                      "Edit Name",
+                      style: TextStyle(fontSize: 15, color: Colors.black),
+                    ),
+                  ),
+                )
+              ],
             ),
-            child: ElevatedButton(
-              //POP UP
+            ElevatedButton(
               onPressed: () async {
                 final eventImage = await openDialogImage();
                 if (eventImage == null || eventImage.isEmpty) return;
-                setState(() => this._eventImage = eventImage);
+                setState(() => _eventImage = eventImage);
               },
               child: const Text(
                 "Edit Image",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontFamily: 'Inter',
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, color: Colors.black),
               ),
             ),
-          ),
-          Padding(
-            // Image of the event will be replaced by actual Image of event
-            padding: const EdgeInsets.all(10),
-            child: Image(
-              image: NetworkImage(_eventImage),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Image.network(_eventImage, height: 150, fit: BoxFit.cover),
             ),
-          ),
-          Padding(
-              padding: const EdgeInsets.only(
-                left: 0.0,
-                top: 5.0,
-                right: 0.0,
-                bottom: 5.0,
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                _startDate + " - " + _endDate,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
-              )),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 0.0,
-              top: 10.0,
-              right: 0.0,
-              bottom: 10.0,
+                "$_startDate - $_endDate",
+                style: const TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-            child: Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () async {
                     final date = await openDialogDate();
                     if (date == null || date.isEmpty) return;
-                    setState(() => this._startDate = date);
+                    setState(() => _startDate = date);
                   },
                   child: const Text(
                     "Edit Start Date",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 13, color: Colors.black),
                   ),
                 ),
+                SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () async {
                     final date = await openDialogDate();
                     if (date == null || date.isEmpty) return;
-                    setState(() => this._endDate = date);
+                    setState(() => _endDate = date);
                   },
                   child: const Text(
                     "Edit End Date",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.right,
+                    style: TextStyle(fontSize: 13, color: Colors.black),
                   ),
                 ),
               ],
             ),
-            
-          ),
-          Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                top: 10.0,
-                right: 20.0,
-                bottom: 10.0,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                "$_startTime - $_endTime",
+                style: const TextStyle(fontSize: 16, color: Colors.black),
               ),
-              child: ElevatedButton(
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
                   onPressed: () async {
-                    final description = await openDialogDescription();
-                    if (description == null || description.isEmpty) return;
-                    setState(() => this._description = description);
+                    final time = await openDialogTime();
+                    if (time == null || time.isEmpty) return;
+                    setState(() => _startTime = time);
                   },
                   child: const Text(
-                    "Edit Description",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
-                    ),
-                  ))),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              _description,
-              style: TextStyle(
-                fontSize: 17,
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.center,
+                    "Edit Start Time",
+                    style: TextStyle(fontSize: 13, color: Colors.black),
+                  ),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () async {
+                    final time = await openDialogTime();
+                    if (time == null || time.isEmpty) return;
+                    setState(() => _endTime = time);
+                  },
+                  child: const Text(
+                    "Edit End Time",
+                    style: TextStyle(fontSize: 13, color: Colors.black),
+                  ),
+                ),
+              ],
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  final description = await openDialogDescription();
+                  if (description == null || description.isEmpty) return;
+                  setState(() => _description = description);
+                },
+                child: const Text(
+                  "Edit Description",
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Text(
+                _description,
+                style: const TextStyle(fontSize: 15, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           const Text(
             "Tap to save changes!",
-            style: TextStyle(fontSize: 17, fontFamily: 'Inter'),
+            style: TextStyle(fontSize: 15, fontFamily: 'Inter'),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 10),
           FloatingActionButton(
             onPressed: () {
               // SAVE EVENT WITH POST REQUEST
+              Navigator.pop(context);
             },
             shape: const CircleBorder(),
             child: const Icon(Icons.add),
@@ -209,75 +214,138 @@ class _EventEditState extends State<EventEdit> {
     );
   }
 
-  Future<String?> openDialogImage() => showDialog<String>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("New Image"),
-          content: TextField(
-            autofocus: true,
-            decoration: InputDecoration(hintText: "Enter image URL"),
-            controller: controller,
-          ),
-          actions: [
-            TextButton(onPressed: submitImage, child: const Text("SAVE")),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Close"))
-          ],
+  Future<String?> openDialogImage() {
+    TextEditingController imageController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("New Image"),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Enter image URL"),
+          controller: imageController,
         ),
-      );
-
-  void submitImage() {
-    Navigator.of(context).pop(controller.text);
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(imageController.text),
+            child: const Text("SAVE"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
   }
 
-  Future<String?> openDialogDescription() => showDialog<String>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("New Description"),
-          content: TextField(
-            autofocus: true,
-            decoration: InputDecoration(hintText: "Enter Description"),
-            controller: controller,
-          ),
-          actions: [
-            TextButton(onPressed: submitDescription, child: const Text("SAVE")),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Close"))
-          ],
+  Future<String?> openDialogDescription() {
+    TextEditingController descriptionController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("New Description"),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Enter Description"),
+          controller: descriptionController,
         ),
-      );
-
-  void submitDescription() {
-    Navigator.of(context).pop(controller.text);
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(descriptionController.text),
+            child: const Text("SAVE"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
   }
 
-  Future<String?> openDialogDate() => showDialog<String>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("New Date (yyyy-mm-dd)"),
-          content: TextField(
-            autofocus: true,
-            decoration: InputDecoration(hintText: "Enter New Date"),
-            controller: controller,
-          ),
-          actions: [
-            TextButton(onPressed: submitDate, child: const Text("SAVE")),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Close"))
-          ],
+  Future<String?> openDialogDate() {
+    TextEditingController dateController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("New Date (yyyy-mm-dd)"),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Enter New Date"),
+          controller: dateController,
         ),
-      );
-        void submitDate() {
-          Navigator.of(context).pop(controller.text);
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(dateController.text),
+            child: const Text("SAVE"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
   }
-        }
-      
+
+  Future<String?> openDialogTime() {
+    TextEditingController timeController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("New Time (hh:mm:ss)"),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Enter New Time"),
+          controller: timeController,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(timeController.text),
+            child: const Text("SAVE"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Future<String?> openDialogName() {
+    TextEditingController nameController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("New Name"),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Enter New Name"),
+          controller: nameController,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(nameController.text),
+            child: const Text("SAVE"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+}
