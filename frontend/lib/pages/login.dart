@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_typing_uninitialized_variables
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/admin_console.dart';
 import 'package:frontend/pages/home.dart';
 import 'package:frontend/pages/authentication_service.dart';
 
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    bool success = await _authService.login(
+    String loginResult = await _authService.login(
       _usernameController.text,
       _passwordController.text,
     );
@@ -30,9 +31,19 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = false;
     });
 
-    if (success) {
+    if (loginResult == 'success') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else if (loginResult == 'invalid_password') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid Password')),
+      );
+    } else if (loginResult == 'username_not_exist') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Username doesn't exist. Don't have an account? Register")),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    bool success = await _authService.register(
+    String registerResult = await _authService.register(
       _usernameController.text,
       _passwordController.text,
     );
@@ -55,9 +66,13 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = false;
     });
 
-    if (success) {
+    if (registerResult == 'success') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else if (registerResult == 'username_exists') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Username already exists. Login')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,16 +120,16 @@ class _LoginPageState extends State<LoginPage> {
               _isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                onPressed: _login,
-                child: Text('Log In'),
-              ),
+                      onPressed: _login,
+                      child: Text('Log In'),
+                    ),
               SizedBox(height: 10),
               _isLoading
                   ? SizedBox()
                   : ElevatedButton(
-                onPressed: _register,
-                child: Text('Register'),
-              ),
+                      onPressed: _register,
+                      child: Text('Register'),
+                    ),
             ],
           ),
         ),
