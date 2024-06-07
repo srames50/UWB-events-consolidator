@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 
 class AdminEventEdit extends StatefulWidget {
   String eventName;
@@ -27,7 +27,38 @@ class _AdminEventEditState extends State<AdminEventEdit> {
   String _endDate = "2024-06-15";
   String _startTime = "08:30:00";
   String _endTime = "12:00:00";
-  final String _ip =  '172.17.96.1'; //// REPLACE WITH YOUR IP / IP OF HOST WHEN IN DEPLOYMENT
+  final String _ip =
+      '172.17.96.1'; //// REPLACE WITH YOUR IP / IP OF HOST WHEN IN DEPLOYMENT
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEventDetails();
+  }
+
+  Future<void> fetchEventDetails() async {
+    final url =
+        Uri.parse('http://172.17.96.1:8080/event/byId/${widget.eventID}');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final eventData = jsonDecode(response.body);
+        setState(() {
+          _description = eventData['description'];
+          _startDate = eventData['startDate'];
+          _endDate = eventData['endDate'];
+          _eventImage = eventData['image'];
+          _startTime = eventData['startTime'].split('T')[1];
+          _endTime = eventData['endTime'].split('T')[1];
+        });
+      } else {
+        print(
+            'Failed to load event details. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching event details: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +102,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                 final eventImage = await openDialogImage();
                 if (eventImage == null || eventImage.isEmpty) return;
                 setState(() => _eventImage = eventImage);
+                await editEventImage(widget.eventID, eventImage);
               },
               child: Image.network(_eventImage, height: 300, fit: BoxFit.cover),
             ),
@@ -82,6 +114,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                     final date = await openDialogDate();
                     if (date == null || date.isEmpty) return;
                     setState(() => _startDate = date);
+                    await editStartDate(widget.eventID, date);
                   },
                   child: Text(
                     _startDate,
@@ -107,6 +140,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                     final date = await openDialogDate();
                     if (date == null || date.isEmpty) return;
                     setState(() => _endDate = date);
+                    await editEndDate(widget.eventID, date);
                   },
                   child: Text(
                     _endDate,
@@ -127,6 +161,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                     final time = await openDialogTime();
                     if (time == null || time.isEmpty) return;
                     setState(() => _startTime = time);
+                    await editStartTime(widget.eventID, time);
                   },
                   child: Text(
                     _startTime,
@@ -152,6 +187,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                     final time = await openDialogTime();
                     if (time == null || time.isEmpty) return;
                     setState(() => _endTime = time);
+                    await editEndTime(widget.eventID, time);
                   },
                   child: Text(
                     _endTime,
@@ -171,6 +207,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                   final description = await openDialogDescription();
                   if (description == null || description.isEmpty) return;
                   setState(() => _description = description);
+                  await editEventDescription(widget.eventID, description);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -236,6 +273,51 @@ class _AdminEventEditState extends State<AdminEventEdit> {
         ],
       ),
     );
+  }
+
+  Future<void> editStartDate(int id, String newDate) async {
+    final String url =
+        'http://172.17.96.1:8080/event/editStartDate/$id'; //// CHNAGE WITH YOUR IP
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'startDate': newDate,
+        },
+      );
+    } catch (e) {
+      print("CHECK THAT YOU CHNAGED TO YOUR IP");
+    }
+  }
+
+  Future<void> editEndDate(int id, String endDate) async {
+    final String url =
+        'http://172.17.96.1:8080/event/editEndDate/$id'; //// CHNAGE WITH YOUR IP
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'endDate': endDate,
+        },
+      );
+    } catch (e) {
+      print("CHECK THAT YOU CHNAGED TO YOUR IP");
+    }
+  }
+
+  Future<void> editEndTime(int id, String endTime) async {
+    final String url =
+        'http://172.17.96.1:8080/event/editEndTime/$id'; //// CHNAGE WITH YOUR IP
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'endTime': endTime,
+        },
+      );
+    } catch (e) {
+      print("CHECK THAT YOU CHNAGED TO YOUR IP");
+    }
   }
 
   Future<String?> openDialogDescription() {
@@ -348,8 +430,39 @@ class _AdminEventEditState extends State<AdminEventEdit> {
   }
 }
 
+Future<void> editStartTime(int id, String startTime) async {
+  final String url =
+      'http://172.17.96.1:8080/event/editStartTime/$id'; //// CHNAGE WITH YOUR IP
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'startTime': startTime,
+      },
+    );
+  } catch (e) {
+    print("CHECK THAT YOU CHNAGED TO YOUR IP");
+  }
+}
+
+Future<void> editEventDescription(int id, String description) async {
+  final String url =
+      'http://172.17.96.1:8080/event/editDescription/$id'; //// CHNAGE WITH YOUR IP
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'description': description,
+      },
+    );
+  } catch (e) {
+    print("CHECK THAT YOU CHNAGED TO YOUR IP");
+  }
+}
+
 Future<void> editEventName(int id, String newName) async {
-  final String url = 'http://172.17.96.1:8080/event/editEventName/$id'; //// CHNAGE WITH YOUR IP
+  final String url =
+      'http://172.17.96.1:8080/event/editEventName/$id'; //// CHNAGE WITH YOUR IP
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -362,8 +475,9 @@ Future<void> editEventName(int id, String newName) async {
   }
 }
 
-  Future<void> editEventImage(int id, String newImage) async {
-  final String url = 'http://172.17.96.1:8080/event/editImage/$id'; //// CHNAGE WITH YOUR IP
+Future<void> editEventImage(int id, String newImage) async {
+  final String url =
+      'http://172.17.96.1:8080/event/editImage/$id'; //// CHNAGE WITH YOUR IP
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -374,9 +488,4 @@ Future<void> editEventName(int id, String newName) async {
   } catch (e) {
     print("CHECK THAT YOU CHNAGED TO YOUR IP");
   }
-
-
-  
 }
-
-    
