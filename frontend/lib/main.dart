@@ -13,7 +13,7 @@ class App extends StatelessWidget {
   // Root of application
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'UWB Events',
       home: LoginPage(),
     );
