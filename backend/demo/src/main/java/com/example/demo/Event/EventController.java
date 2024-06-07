@@ -1,11 +1,15 @@
 package com.example.demo.Event;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller class for managing Event-related HTTP requests.
@@ -14,6 +18,8 @@ import java.util.List;
 @RequestMapping("/event")
 public class EventController {
     private final EventService eventService;
+
+    
 
     /**
      * Constructor for EventController. Automatically injects the EventService dependency.
@@ -36,6 +42,7 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
+
     /**
      * Gets the events for the homepage (Two with picture) (Next Five)
      * Example URL: http://localhost:8080/event/homeEvents
@@ -45,6 +52,17 @@ public class EventController {
     @GetMapping("homeEvents")
     public List<Event> getHomeEvents() {
         return eventService.getHomePageEvents();
+    }
+
+    /**
+     *End Point to find event by Name
+     * @param name Name of search
+     * EXAMPLE http://localhost:8080/event/byNameExact/Rahul_Test_Event1 (Make sure the event name exists in database)
+     * @return event if found
+     */
+    @GetMapping("byId/{id}")
+    public Event getByName(@PathVariable Integer id){
+        return eventService.getByID(id);
     }
 
     /**
