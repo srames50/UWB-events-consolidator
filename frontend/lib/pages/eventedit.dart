@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/adminedit.dart';
-//NA
+import 'package:http/http.dart' as http;
 
 class EventEdit extends StatefulWidget {
   const EventEdit({Key? key}) : super(key: key);
@@ -106,9 +106,35 @@ class _EventEditState extends State<EventEdit> {
                 },
               ),
             ),
+            SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  fetchAllEvents();
+                },
+                child: Text('Fetch All Events'),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> fetchAllEvents() async {
+    final url = Uri.parse('http://172.17.96.1:8080/event/allEvents');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        print('Response body:');
+        print(response.body);
+      } else {
+        print('Failed to fetch events. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching events: $e');
+    }
   }
 }

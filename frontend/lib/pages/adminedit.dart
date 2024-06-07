@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
-//NA
-class AdminEventEdit extends StatefulWidget {
-  final String eventName;
+import 'dart:async';
+import 'dart:io';
 
-  const AdminEventEdit({Key? key, required this.eventName}) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+
+class AdminEventEdit extends StatefulWidget {
+  String eventName;
+  final int eventID = 5;
+
+  AdminEventEdit({Key? key, required this.eventName}) : super(key: key);
 
   @override
   State<AdminEventEdit> createState() => _AdminEventEditState();
@@ -21,8 +27,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
   String _endDate = "2024-06-15";
   String _startTime = "08:30:00";
   String _endTime = "12:00:00";
-  
-  
+  final String _ip =  '172.17.96.1'; //// REPLACE WITH YOUR IP / IP OF HOST WHEN IN DEPLOYMENT
 
   @override
   Widget build(BuildContext context) {
@@ -34,35 +39,31 @@ class _AdminEventEditState extends State<AdminEventEdit> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                  child: Center(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                  child: TextButton(
+                    onPressed: () async {
+                      final name = await openDialogName();
+                      if (name == null || name.isEmpty) return;
+                      setState(() => widget.eventName = name);
+                      // Call API to update event name
+                      await editEventName(widget.eventID, name);
+                    },
                     child: Text(
-                      _selectedEventName,
-                      style: const TextStyle(
+                      widget.eventName,
+                      style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
+                        fontFamily: "Inter",
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final name = await openDialogName();
-                      if (name == null || name.isEmpty) return;
-                      setState(() => _selectedEventName = name);
-                    },
-                    child: const Text(
-                      "Edit Name",
-                      style: TextStyle(fontSize: 15, color: Colors.black),
-                    ),
-                  ),
-                )
               ],
             ),
             ElevatedButton(
@@ -71,106 +72,118 @@ class _AdminEventEditState extends State<AdminEventEdit> {
                 if (eventImage == null || eventImage.isEmpty) return;
                 setState(() => _eventImage = eventImage);
               },
-              child: const Text(
-                "Edit Image",
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Image.network(_eventImage, height: 150, fit: BoxFit.cover),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                "$_startDate - $_endDate",
-                style: const TextStyle(fontSize: 16, color: Colors.black),
-              ),
+              child: Image.network(_eventImage, height: 300, fit: BoxFit.cover),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                TextButton(
                   onPressed: () async {
                     final date = await openDialogDate();
                     if (date == null || date.isEmpty) return;
                     setState(() => _startDate = date);
                   },
-                  child: const Text(
-                    "Edit Start Date",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
+                  child: Text(
+                    _startDate,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontFamily: "Inter",
+                    ),
                   ),
                 ),
-                SizedBox(width: 8),
-                ElevatedButton(
+                SizedBox(width: 4),
+                Text(
+                  "-",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontFamily: "Inter",
+                  ),
+                ),
+                SizedBox(width: 4),
+                TextButton(
                   onPressed: () async {
                     final date = await openDialogDate();
                     if (date == null || date.isEmpty) return;
                     setState(() => _endDate = date);
                   },
-                  child: const Text(
-                    "Edit End Date",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
+                  child: Text(
+                    _endDate,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontFamily: "Inter",
+                    ),
                   ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                "$_startTime - $_endTime",
-                style: const TextStyle(fontSize: 16, color: Colors.black),
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                TextButton(
                   onPressed: () async {
                     final time = await openDialogTime();
                     if (time == null || time.isEmpty) return;
                     setState(() => _startTime = time);
                   },
-                  child: const Text(
-                    "Edit Start Time",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
+                  child: Text(
+                    _startTime,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontFamily: "Inter",
+                    ),
                   ),
                 ),
-                SizedBox(width: 8),
-                ElevatedButton(
+                SizedBox(width: 4),
+                Text(
+                  "-",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontFamily: "Inter",
+                  ),
+                ),
+                SizedBox(width: 4),
+                TextButton(
                   onPressed: () async {
                     final time = await openDialogTime();
                     if (time == null || time.isEmpty) return;
                     setState(() => _endTime = time);
                   },
-                  child: const Text(
-                    "Edit End Time",
-                    style: TextStyle(fontSize: 13, color: Colors.black),
+                  child: Text(
+                    _endTime,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontFamily: "Inter",
+                    ),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
                 onPressed: () async {
                   final description = await openDialogDescription();
                   if (description == null || description.isEmpty) return;
                   setState(() => _description = description);
                 },
-                child: const Text(
-                  "Edit Description",
-                  style: TextStyle(fontSize: 15, color: Colors.black),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _description,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontFamily: "Inter",
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Text(
-                _description,
-                style: const TextStyle(fontSize: 15, color: Colors.black),
-                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -179,18 +192,19 @@ class _AdminEventEditState extends State<AdminEventEdit> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Text(
-            "Tap to save changes!",
-            style: TextStyle(fontSize: 15, fontFamily: 'Inter'),
-          ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           FloatingActionButton(
             onPressed: () {
               // SAVE EVENT WITH POST REQUEST
               Navigator.pop(context);
             },
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add),
+            shape: CircleBorder(),
+            child: Icon(
+              Icons.add,
+              size: 50,
+            ),
+            backgroundColor: Color(0xFF4B2E83),
+            foregroundColor: Color.fromARGB(255, 153, 115, 227),
           ),
         ],
       ),
@@ -237,7 +251,8 @@ class _AdminEventEditState extends State<AdminEventEdit> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(descriptionController.text),
+            onPressed: () =>
+                Navigator.of(context).pop(descriptionController.text),
             child: const Text("SAVE"),
           ),
           TextButton(
@@ -304,7 +319,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
       ),
     );
   }
-  
+
   Future<String?> openDialogName() {
     TextEditingController nameController = TextEditingController();
     return showDialog<String>(
@@ -332,3 +347,36 @@ class _AdminEventEditState extends State<AdminEventEdit> {
     );
   }
 }
+
+Future<void> editEventName(int id, String newName) async {
+  final String url = 'http://172.17.96.1:8080/event/editEventName/$id'; //// CHNAGE WITH YOUR IP
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'eventName': newName,
+      },
+    );
+  } catch (e) {
+    print("CHECK THAT YOU CHNAGED TO YOUR IP");
+  }
+}
+
+  Future<void> editEventImage(int id, String newImage) async {
+  final String url = 'http://172.17.96.1:8080/event/editImage/$id'; //// CHNAGE WITH YOUR IP
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'newImage': newImage,
+      },
+    );
+  } catch (e) {
+    print("CHECK THAT YOU CHNAGED TO YOUR IP");
+  }
+
+
+  
+}
+
+    
