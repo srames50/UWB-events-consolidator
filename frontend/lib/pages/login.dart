@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (loginResult == 'success') {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } else if (loginResult == 'invalid_password') {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (registerResult == 'success') {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } else if (registerResult == 'username_exists') {
       ScaffoldMessenger.of(context).showSnackBar(
