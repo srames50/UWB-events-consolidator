@@ -1,6 +1,6 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart';
+import 'package:frontend/pages/eventedit.dart';
 import '../components/drawer.dart';
 import './event.dart';
 import './eventsearch.dart';
@@ -60,7 +60,6 @@ class _HomePageState extends State<HomePage> {
       _error = e.toString();
       _isLoading = false;
     }
-
   }
 
   @override
@@ -71,9 +70,12 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Eventipedia - UW Bothell', style: TextStyle(
-          color: Color(0xFF4B2E83),
-        ),),
+        title: const Text(
+          'Eventipedia - UW Bothell',
+          style: TextStyle(
+            color: Color(0xFF4B2E83),
+          ),
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -108,11 +110,15 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: EdgeInsets.only(bottom: 10),
                 // New events
-                child: Text('New this week: $formattedDate', textAlign: TextAlign.center, style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 17,
-                )),
+                child: Text(
+                  'New this week: $formattedDate',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 17,
+                  ),
+                ),
               ),
             ),
             // Featured Events displayed below
@@ -132,50 +138,55 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           Navigator.of(context).push(
                             // line below needs update
-                            MaterialPageRoute(builder: (context) => EventPage(title: event.eventName, image: 'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'))
+                            MaterialPageRoute(
+                              builder: (context) => EventPage(
+                                title: event.eventName,
+                                image:
+                                    'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg',
+                              ),
+                            ),
                           );
                         },
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(
-                                   // Line below needs update
-                                  image: NetworkImage('https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.5), // Adjust opacity here
-                                    BlendMode.dstATop,
-                                  ),
-                                )
-                              ),
-                            ),
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Color(0xFF4B2E83).withOpacity(0.4), // Shade color with opacity
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: Center(
-                                child: Text(
-                                  event.eventName,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
+                        child: Stack(children: [
+                          Container(
+                            width: 343,
+                            height: 360,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              image: DecorationImage(
+                                // Line below needs update
+                                image: NetworkImage(
+                                    'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
+                                fit: BoxFit.cover,
+                                colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.5), // Adjust opacity here
+                                  BlendMode.dstATop,
                                 ),
                               ),
                             ),
-                          ]
-                        )
+                          ),
+                          Container(
+                            width: 343,
+                            height: 360,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Color(0xFF4B2E83).withOpacity(0.4), // Shade color with opacity
+                            ),
+                          ),
+                          Positioned.fill(
+                            child: Center(
+                              child: Text(
+                                event.eventName,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ]),
                       ),
                     );
                   }).toList(),
@@ -184,68 +195,97 @@ class _HomePageState extends State<HomePage> {
             Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: Text('Other Events:', textAlign: TextAlign.center, style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 17,
-                )),
+                child: Text(
+                  'Other Events:',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 17,
+                  ),
+                ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                SizedBox(
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
                   height: 295,
                   child: ListView(
                     scrollDirection: Axis.vertical,
                     children: const [
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 1', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 1',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 2', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 2',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 3', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 3',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 4', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 4',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 5', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 5',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                     ],
-                  )
-                )
-              ]
-            )
-          ]
-        )
+                  ))
+            ])
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => EventEdit()), // Navigate to EventEdit
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF4B2E83),
       ),
     );
   }
