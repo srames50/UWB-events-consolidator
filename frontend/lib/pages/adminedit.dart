@@ -7,9 +7,9 @@ import 'package:http/http.dart' as http;
 
 class AdminEventEdit extends StatefulWidget {
   String eventName;
-  final int eventID = 5;
+  final int eventID;
 
-  AdminEventEdit({Key? key, required this.eventName}) : super(key: key);
+  AdminEventEdit({Key? key, required this.eventName, required this.eventID}) : super(key: key);
 
   @override
   State<AdminEventEdit> createState() => _AdminEventEditState();
@@ -64,7 +64,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.eventName),
+        title: Text("Editing Event"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

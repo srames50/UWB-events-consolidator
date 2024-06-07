@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/adminedit.dart';
 import 'package:http/http.dart' as http;
@@ -10,31 +12,21 @@ class EventEdit extends StatefulWidget {
 }
 
 class _EventEditState extends State<EventEdit> {
-  String _title = "Select Event";
+  late int _eventID;
+  List<Map<String, dynamic>> _events = [];
+  final int _userId = 6;
 
-  String _selectedEventName = 'Select Event To Edit';
-  String _eventImage =
-      'https://www.investopedia.com/thmb/_EUeiZWojyM4VEYLSfQ5AMbrzf4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-1503239849-0dc8617d35594774b51c998694997431.jpg';
-  String _description =
-      "Yo this event is so lit brah if I were the event people I would tots put a description here like no cap brah";
-  String _startDate = "2024-06-09";
-  String _endDate = "2024-06-15";
-  String _startTime = "08:30:00";
-  String _endTime = "12:00:00";
-
-  List<String> _events = [
-    'Month, Day: Event 1',
-    'Month, Day: Event 2',
-    'Month, Day: Event 3',
-    'Month, Day: Event 4',
-    'Month, Day: Event 5',
-  ];
+  @override
+  void initState() {
+    fetchAllEvents(); // Fetch events when the widget initializes
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: Text("Admin Console"),
         centerTitle: true,
       ),
       body: Padding(
@@ -49,7 +41,7 @@ class _EventEditState extends State<EventEdit> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      'Other Events:',
+                      'Events:',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -67,7 +59,10 @@ class _EventEditState extends State<EventEdit> {
                 scrollDirection: Axis.vertical,
                 itemCount: _events.length,
                 itemBuilder: (context, index) {
-                  final eventName = _events[index];
+                  final event = _events[index];
+                  final startDate = event['startDate'];
+                  final eventName = event['eventName'];
+                  final eventId = event['id'];
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
@@ -76,7 +71,7 @@ class _EventEditState extends State<EventEdit> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 15.0),
                             child: Text(
-                              eventName,
+                              '$startDate $eventName',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
@@ -88,12 +83,20 @@ class _EventEditState extends State<EventEdit> {
                         ),
                         FloatingActionButton(
                           onPressed: () {
+                            _eventID = eventId;
+                            
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    AdminEventEdit(eventName: eventName),
+                                    AdminEventEdit(
+                                      eventName: eventName,
+                                      eventID: eventId,
+
+                                    ),
                               ),
+
                             );
+                            
                           },
                           child: Icon(Icons.check_box_outlined),
                           backgroundColor: Colors.white,
@@ -106,15 +109,7 @@ class _EventEditState extends State<EventEdit> {
                 },
               ),
             ),
-            SizedBox(height: 16),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  fetchAllEvents();
-                },
-                child: Text('Fetch All Events'),
-              ),
-            ),
+           
           ],
         ),
       ),
@@ -122,14 +117,25 @@ class _EventEditState extends State<EventEdit> {
   }
 
   Future<void> fetchAllEvents() async {
-    final url = Uri.parse('http://172.17.96.1:8080/event/allEvents');
+    final url = Uri.parse('http://172.17.96.1:8080/user/userEvents/$_userId');
 
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        print('Response body:');
-        print(response.body);
+        List<dynamic> events = jsonDecode(response.body);
+        setState(() {
+          _events = events.map((event) => {
+            'id': event['id'],
+            'eventName': event['eventName'],
+            'startDate': event['startDate'],
+            'description': event['description'],
+            'endDate': event['endDate'],
+            'image': event['image'],
+            'createdAt': event['createdAt'],
+            'signedUpUsers': event['signedUpUsers'],
+          }).toList();
+        });
       } else {
         print('Failed to fetch events. Status code: ${response.statusCode}');
       }
