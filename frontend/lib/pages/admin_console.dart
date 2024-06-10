@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/eventedit.dart';
 
 class AdminConsolePage extends StatefulWidget {
   const AdminConsolePage({Key? key}) : super(key: key);
@@ -44,10 +45,16 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _showButtonsOnPage = !_showButtonsOnPage;
+                      // Navigate to the EditEvent page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EventEdit()),
+                      ).then((_) {
+                        // After navigation, close the buttons
+                        setState(() {
+                          _showButtonsOnPage = false;
+                        });
                       });
-                      // Navigate to edit event page
                     },
                     child: Text('Edit'),
                   ),

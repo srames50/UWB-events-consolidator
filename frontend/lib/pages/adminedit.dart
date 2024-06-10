@@ -9,7 +9,8 @@ class AdminEventEdit extends StatefulWidget {
   String eventName;
   final int eventID;
 
-  AdminEventEdit({Key? key, required this.eventName, required this.eventID}) : super(key: key);
+  AdminEventEdit({Key? key, required this.eventName, required this.eventID})
+      : super(key: key);
 
   @override
   State<AdminEventEdit> createState() => _AdminEventEditState();

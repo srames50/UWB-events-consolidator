@@ -84,19 +84,15 @@ class _EventEditState extends State<EventEdit> {
                         FloatingActionButton(
                           onPressed: () {
                             _eventID = eventId;
-                            
+
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    AdminEventEdit(
-                                      eventName: eventName,
-                                      eventID: eventId,
-
-                                    ),
+                                builder: (context) => AdminEventEdit(
+                                  eventName: eventName,
+                                  eventID: eventId,
+                                ),
                               ),
-
                             );
-                            
                           },
                           child: Icon(Icons.check_box_outlined),
                           backgroundColor: Colors.white,
@@ -109,7 +105,6 @@ class _EventEditState extends State<EventEdit> {
                 },
               ),
             ),
-           
           ],
         ),
       ),
@@ -125,16 +120,18 @@ class _EventEditState extends State<EventEdit> {
       if (response.statusCode == 200) {
         List<dynamic> events = jsonDecode(response.body);
         setState(() {
-          _events = events.map((event) => {
-            'id': event['id'],
-            'eventName': event['eventName'],
-            'startDate': event['startDate'],
-            'description': event['description'],
-            'endDate': event['endDate'],
-            'image': event['image'],
-            'createdAt': event['createdAt'],
-            'signedUpUsers': event['signedUpUsers'],
-          }).toList();
+          _events = events
+              .map((event) => {
+                    'id': event['id'],
+                    'eventName': event['eventName'],
+                    'startDate': event['startDate'],
+                    'description': event['description'],
+                    'endDate': event['endDate'],
+                    'image': event['image'],
+                    'createdAt': event['createdAt'],
+                    'signedUpUsers': event['signedUpUsers'],
+                  })
+              .toList();
         });
       } else {
         print('Failed to fetch events. Status code: ${response.statusCode}');

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart';
+import 'package:frontend/pages/adminedit.dart';
 import 'package:frontend/pages/eventedit.dart';
 import '../components/drawer.dart';
 import './event.dart';
@@ -93,7 +94,9 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EventSearchPage()), // Navigate to EventSearchPage
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EventSearchPage()), // Navigate to EventSearchPage
               );
             },
             color: Color(0xFF4B2E83),
@@ -159,7 +162,8 @@ class _HomePageState extends State<HomePage> {
                                     'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
                                 fit: BoxFit.cover,
                                 colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.5), // Adjust opacity here
+                                  Colors.black
+                                      .withOpacity(0.5), // Adjust opacity here
                                   BlendMode.dstATop,
                                 ),
                               ),
@@ -170,7 +174,8 @@ class _HomePageState extends State<HomePage> {
                             height: 360,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: Color(0xFF4B2E83).withOpacity(0.4), // Shade color with opacity
+                              color: Color(0xFF4B2E83)
+                                  .withOpacity(0.4), // Shade color with opacity
                             ),
                           ),
                           Positioned.fill(
@@ -277,15 +282,6 @@ class _HomePageState extends State<HomePage> {
             ])
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => EventEdit()), // Navigate to EventEdit
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Color(0xFF4B2E83),
       ),
     );
   }
