@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/adminedit.dart';
+import 'package:frontend/pages/eventcreate.dart';
 import 'package:http/http.dart' as http;
 
 class EventEdit extends StatefulWidget {
@@ -113,11 +114,20 @@ class _EventEditState extends State<EventEdit> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AdminEventCreate()), // Navigate to EventEdit
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF4B2E83),
+      ),
     );
   }
 
   Future<void> fetchAllEvents() async {
-    final url = Uri.parse('http://172.17.96.1:8080/user/userEvents/$_userId');
+    final url = Uri.parse('http://10.0.0.95:8080/user/userEvents/$_userId');
 
     try {
       final response = await http.get(url);
