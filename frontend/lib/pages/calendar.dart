@@ -126,6 +126,7 @@ class _CalendarPageState extends State<CalendarPage> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
+        // ListView to display the list of events
         if (events.isNotEmpty)
           Expanded(
             child: ListView.builder(
@@ -148,6 +149,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         builder: (context) => EventPage(
                           title: event.eventName, // Pass event name to EventPage
                           image: event.image ?? '', // Pass event image to EventPage
+                          navTo: 'calendar',
                         ),
                       ),
                     );

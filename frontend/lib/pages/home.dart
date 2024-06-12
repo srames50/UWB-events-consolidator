@@ -7,18 +7,6 @@ import './eventsearch.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
-// Async function that parses and filters JSON objects
-Future<List<Event>> _fetchEvents(String jsonString) async {
-  // Get the json data by parsing the passed in string
-  final List<dynamic> jsonData = jsonDecode(jsonString);
-
-  // now return with the output stream: map it, where only events that are not null are used, and parse it to a list
-  return jsonData
-      .map((json) => Event.fromJson(json))
-      .where((event) => event.image != null)
-      .toList();
-}
-
 // Must use links for images rather than assets - makes loading from DB a lot easier and seamless
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 // Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
@@ -42,8 +30,7 @@ class _HomePageState extends State<HomePage> {
     loadEvents();
   }
 
-  // method to call the API service (use try/catch to catch the error and capture it in the string)
-  loadEvents() async {
+  Future<void> loadEvents() async {
     setState(() {
       _isLoading = true;
       _error = "";
@@ -51,16 +38,18 @@ class _HomePageState extends State<HomePage> {
     try {
       // Get the data string and pass it into fetchEvents
       final data = await apiService.getHomePageData();
-      final events = await _fetchEvents(data);
+      List<dynamic> jsonData = jsonDecode(data);
+      List<Event> events = jsonData.map((item) => Event.fromJson(item)).toList();
       setState(() {
         _events = events;
         _isLoading = false;
       });
     } catch (e) {
-      _error = e.toString();
-      _isLoading = false;
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
     }
-
   }
 
   @override
@@ -107,15 +96,17 @@ class _HomePageState extends State<HomePage> {
             Center(
               child: Padding(
                 padding: EdgeInsets.only(bottom: 10),
-                // New events
-                child: Text('New this week: $formattedDate', textAlign: TextAlign.center, style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 17,
-                )),
+                child: Text(
+                  'New This Week: $formattedDate', 
+                  textAlign: TextAlign.center, 
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 17,
+                  )
+                )
               ),
             ),
-            // Featured Events displayed below
             if (_isLoading)
               Center(child: CircularProgressIndicator())
             else if (_error.isNotEmpty)
@@ -131,8 +122,7 @@ class _HomePageState extends State<HomePage> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
-                            // line below needs update
-                            MaterialPageRoute(builder: (context) => EventPage(title: event.eventName, image: 'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'))
+                            MaterialPageRoute(builder: (context) => EventPage(title: event.eventName, image: event.image, navTo: 'home',))
                           );
                         },
                         child: Stack(
@@ -143,8 +133,7 @@ class _HomePageState extends State<HomePage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 image: DecorationImage(
-                                   // Line below needs update
-                                  image: NetworkImage('https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
+                                  image: NetworkImage(event.image),
                                   fit: BoxFit.cover,
                                   colorFilter: ColorFilter.mode(
                                     Colors.black.withOpacity(0.5), // Adjust opacity here
@@ -259,7 +248,7 @@ class Event {
   final DateTime endTime;
   final DateTime startDate;
   final DateTime endDate;
-  final String? image;
+  final String image;
   final DateTime createdAt;
   final List<dynamic> signedUpUsers;
 
@@ -286,8 +275,8 @@ class Event {
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       image: json['image'],
-      createdAt: DateTime.parse(json['createdAt']),
-      signedUpUsers: json['signedUpUsers'],
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      signedUpUsers: List<dynamic>.from(json['signedUpUsers']),
     );
   }
 }

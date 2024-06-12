@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart';
+import 'package:frontend/pages/calendar.dart';
+import 'package:frontend/pages/user_events.dart';
+
 import '../components/drawer.dart';
 import './event.dart';
 import './eventsearch.dart';
@@ -40,8 +43,9 @@ Future<Event?> _fetchEvent(String jsonString, String name) async {
 class EventPage extends StatefulWidget {
   final String title;
   final String image;
+  final String navTo;
 
-  const EventPage({super.key, required this.title, required this.image});
+  EventPage({super.key, required this.title, required this.image, required this.navTo});
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -67,12 +71,14 @@ class _EventPageState extends State<EventPage> {
   /// This method sets the loading state to true, fetches all events from the API,
   /// finds the event matching the title, and updates the state with the event's details.
   /// If an error occurs, it updates the error message in the state.
+
   void loadEvent() async {
     setState(() {
       _isLoading = true;
       _error = "";
     });
     try {
+      // Get the data string and pass it into fetchEvents
       final data = await apiService.getAllEvents();
       final event = await _fetchEvent(data, widget.title);
       setState(() {
@@ -106,9 +112,19 @@ class _EventPageState extends State<EventPage> {
             return IconButton(
               icon: const Icon(Icons.chevron_left),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomePage())
-                );
+                if (widget.navTo == 'home') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => HomePage())
+                  );
+                } else if (widget.navTo == 'userEvents') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => UserEventsPage())
+                  );
+                } else if (widget.navTo == 'calendar') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => CalendarPage())
+                  );
+                }
               },
             );
           },

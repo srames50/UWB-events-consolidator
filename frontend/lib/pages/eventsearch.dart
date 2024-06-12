@@ -88,6 +88,7 @@ class _EventSearchPageState extends State<EventSearchPage> {
                           builder: (context) => EventPage(
                             title: event.eventName,
                             image: event.image ?? '', // Pass the event image to EventPage
+                            navTo: 'home', 
                           ),
                         ),
                       );
