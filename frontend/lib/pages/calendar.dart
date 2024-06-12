@@ -127,23 +127,33 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
         // ListView to display the list of events
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(events[index].title),
-              subtitle: Text(events[index].description),
-              onTap: () {
-                // Navigate to the EventPage when an event is tapped
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EventPage(
-                    title: events[index].title,
-                    image: events[index].imageUrl,
-                    navTo: 'calendar',
-                  )),
+        if (events.isNotEmpty)
+          Expanded(
+            child: ListView.builder(
+              itemCount: events.length, // Number of events
+              itemBuilder: (context, index) {
+                final event = events[index]; // Event at the current index
+                return ListTile(
+                  leading: Icon(Icons.event, color: Colors.green), // Icon for the event
+                  title: Text(
+                    event.eventName,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),  
+                  subtitle: Text(
+                    '${DateFormat('MMM dd, yyyy').format(event.startDate!)} at ${DateFormat('h:mm a').format(event.startTime!)}',
+                  ), // Event description and date/time
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventPage(
+                          title: event.eventName, // Pass event name to EventPage
+                          image: event.image ?? '', // Pass event image to EventPage
+                          navTo: 'calendar',
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),

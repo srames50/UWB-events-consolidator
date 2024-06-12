@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import './event.dart';
+import 'package:frontend/api_service.dart'; // Import your ApiService
+import 'dart:convert';
+import './event.dart'; // Import your Event model here
 
 // This allows the user to search for events from a predefined list and navigate to the event details page.
 class EventSearchPage extends StatefulWidget {
@@ -84,9 +86,9 @@ class _EventSearchPageState extends State<EventSearchPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EventPage(
-                            title: _filteredEvents[index],
-                            image: 'https://example.com/image_url', // Replace with actual image URL
-                            navTo: 'home',
+                            title: event.eventName,
+                            image: event.image ?? '', // Pass the event image to EventPage
+                            navTo: 'home', 
                           ),
                         ),
                       );
