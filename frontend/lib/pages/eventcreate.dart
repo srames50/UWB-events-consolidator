@@ -200,33 +200,57 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
     );
   }
 
-  // Response body: 
-  // '{
-  //    "eventName":"New",
-  //    "description":"Event Description",
-  //    "startTime":"2024-06-01T10:00:00",
-  //    "endTime":"2024-06-01T12:00:00",
-  //    "startDate":"2024-06-01",
-  //    "endDate":"2024-06-01",
-  //    "image":"image_url"
-  // }'
   Future<void> addEvent() async {
-    final String url =
-        'http://10.0.0.95:8080/event/addEvent'; //// CHNAGE WITH YOUR IP
+    final String url = 'http://172.17.96.1:8080/event/addEvent'; // Change to your IP
     try {
+      final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+      final DateFormat dateTimeFormat = DateFormat("yyyy-MM-ddTHH:mm:ss");
+
+      final startDate = dateFormat.format(_selectedDateRange!.start);
+      final endDate = dateFormat.format(_selectedDateRange!.end);
+      final startTime = dateTimeFormat.format(DateTime(
+        _selectedDateRange!.start.year,
+        _selectedDateRange!.start.month,
+        _selectedDateRange!.start.day,
+        _startTime!.hour,
+        _startTime!.minute,
+      ));
+      final endTime = dateTimeFormat.format(DateTime(
+        _selectedDateRange!.start.year,
+        _selectedDateRange!.start.month,
+        _selectedDateRange!.start.day,
+        _endTime!.hour,
+        _endTime!.minute,
+      ));
+
+      final body = json.encode({
+        'eventName': _eventName,
+        'description': _description,
+        'startTime': startTime,
+        'endTime': endTime,
+        'startDate': startDate,
+        'endDate': endDate,
+        'image': _eventImage,
+      });
+
+      print("Request Body: $body");
+
       final response = await http.post(
         Uri.parse(url),
-        body: {
-          'name': _eventName,
-          'description': _description,
-          'startTime': _startTime.toString(),
-          'endTime': _endTime.toString(),
-          'startDate': _selectedDateRange?.start.toString(),
-          'endDate': _selectedDateRange?.end.toString(),
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: body,
       );
+
+      if (response.statusCode == 200) {
+        print("Event added successfully");
+      } else {
+        print("Failed to add event: ${response.statusCode}");
+        print("Response: ${response.body}");
+      }
     } catch (e) {
-      print(e.toString());
+      print("Error: $e");
     }
   }
 
@@ -262,70 +286,15 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("New Description"),
+        title: const Text("Description"),
         content: TextField(
           autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter Description"),
+          decoration: const InputDecoration(hintText: "Enter description"),
           controller: descriptionController,
         ),
         actions: [
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(descriptionController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> openDialogDate() {
-    TextEditingController dateController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Date (yyyy-mm-dd)"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter New Date"),
-          controller: dateController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(dateController.text),
-            child: const Text("SAVE"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> openDialogTime() {
-    TextEditingController timeController = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("New Time (hh:mm:ss)"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter New Time"),
-          controller: timeController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(timeController.text),
+            onPressed: () => Navigator.of(context).pop(descriptionController.text),
             child: const Text("SAVE"),
           ),
           TextButton(
@@ -344,10 +313,10 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("New Name"),
+        title: const Text("Event Name"),
         content: TextField(
           autofocus: true,
-          decoration: const InputDecoration(hintText: "Enter New Name"),
+          decoration: const InputDecoration(hintText: "Enter event name"),
           controller: nameController,
         ),
         actions: [
