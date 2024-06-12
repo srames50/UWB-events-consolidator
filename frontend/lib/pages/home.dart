@@ -7,7 +7,6 @@ import './eventsearch.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
-
 // Must use links for images rather than assets - makes loading from DB a lot easier and seamless
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 // Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
@@ -50,9 +49,6 @@ class _HomePageState extends State<HomePage> {
         _error = e.toString();
         _isLoading = false;
       });
-    }
-      _error = e.toString();
-      _isLoading = false;
     }
   }
 
