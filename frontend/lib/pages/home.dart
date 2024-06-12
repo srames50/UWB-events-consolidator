@@ -7,6 +7,9 @@ import './eventsearch.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
+// Must use links for images rather than assets - makes loading from DB a lot easier and seamless
+// HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
+// Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
@@ -27,7 +30,6 @@ class _HomePageState extends State<HomePage> {
     loadEvents();
   }
 
-  // Method to call the API service (use try/catch to catch the error and capture it in the string)
   Future<void> loadEvents() async {
     setState(() {
       _isLoading = true;
@@ -47,6 +49,9 @@ class _HomePageState extends State<HomePage> {
         _error = e.toString();
         _isLoading = false;
       });
+    }
+      _error = e.toString();
+      _isLoading = false;
     }
   }
 

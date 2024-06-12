@@ -24,17 +24,15 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Optional<Event> findById(Integer ID);
 
     /**
-     *Query that gets all events with images. Will later sort to get however many are wanted for the homepage
-     * @return all events with images sorted by time
+     * Query that gets all within a week sorted. Will later sort to get however many are wanted for the homepage
+     * all events within a week sorted by time
+     * @param endOfWeek End of range of events wanted
+     * @param now start of range of events wanted
+     * @return list of events that take place this week
      */
-    @Query("SELECT e FROM Event e WHERE e.image IS NOT NULL ORDER BY e.startDate, e.startTime")
-    List<Event> getSortedImageEvents();
-    /**
-     *Query that gets sorted events . Will later sort to get however many are wanted for the homepage
-     * @return all events  sorted by time
-     */
-    @Query("SELECT e FROM Event e WHERE e.image IS NULL ORDER BY e.startDate, e.startTime")
-    List<Event> getSortedEvents();
+    @Query("SELECT e FROM Event e WHERE e.startDate BETWEEN :now and :endOfWeek ORDER BY e.startDate, e.startTime")
+    List<Event> getSortedEventsWithinWeek(LocalDate endOfWeek, LocalDate now);
+
 
     /**
      * Query that gets events occurring on a specific date.
