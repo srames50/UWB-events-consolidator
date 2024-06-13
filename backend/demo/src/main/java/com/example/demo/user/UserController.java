@@ -37,6 +37,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/isAdmin/{id}")
+    public Boolean isAdmin(@PathVariable Integer id){
+        return userService.isAdmin(id);
+
+    }
+
     /**
      * Endpoint to Return the events for the user by ID
      * use http://localhost:8080/user/userEvents/ID
