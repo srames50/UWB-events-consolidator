@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/eventedit.dart';
 import '../components/drawer.dart';
@@ -5,8 +7,51 @@ import './event.dart';
 import './eventsearch.dart';
 
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> _events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHomeEvents();
+  }
+
+  Future<void> fetchHomeEvents() async {
+    final url = Uri.parse('http://192.168.1.3:8080/event/homeEvents');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> events = jsonDecode(response.body);
+        setState(() {
+          _events = events
+              .map((event) => {
+                    'id': event['id'],
+                    'eventName': event['eventName'],
+                    'startDate': event['startDate'],
+                    'description': event['description'],
+                    'endDate': event['endDate'],
+                    'image': event['image'],
+                    'createdAt': event['createdAt'],
+                    'signedUpUsers': event['signedUpUsers'],
+                  })
+              .toList();
+        });
+      } else {
+        print('Failed to fetch events. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching events: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +80,9 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EventSearchPage()), // Navigate to EventSearchPage
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EventSearchPage()), // Navigate to EventSearchPage
               );
             },
             color: Color(0xFF4B2E83),
@@ -70,122 +117,10 @@ class HomePage extends StatelessWidget {
                 height: 360,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 13),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EventPage(
-                                title: 'Event 1',
-                                image:
-                                    'https://i.natgeofe.com/n/8a4cd21e-3906-4c9d-8838-b13ef85f4b6e/tpc18-outdoor-gallery-1002418-12000351_01_3x2.jpg',
-                              ),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://i.natgeofe.com/n/8a4cd21e-3906-4c9d-8838-b13ef85f4b6e/tpc18-outdoor-gallery-1002418-12000351_01_3x2.jpg'),
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.5), // Adjust opacity here
-                                    BlendMode.dstATop,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Color(0xFF4B2E83).withOpacity(0.4), // Shade color with opacity
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: Center(
-                                child: Text(
-                                  'Event 1',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 13),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EventPage(
-                                title: 'Event 2',
-                                image:
-                                    'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg',
-                              ),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.5), // Adjust opacity here
-                                    BlendMode.dstATop,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Color(0xFF4B2E83).withOpacity(0.4), // Shade color with opacity
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: Center(
-                                child: Text(
-                                  'Event 2',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  children: _events.take(2).map((event) {
+                    return _buildEventCard(context, event['eventName'],
+                        event['image'], event['id'].toString());
+                  }).toList(),
                 ),
               ),
             ),
@@ -203,78 +138,30 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 295,
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Month, Day: Event 1',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Month, Day: Event 2',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Month, Day: Event 3',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Month, Day: Event 4',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Month, Day: Event 5',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            Expanded(
+              child: ListView.builder(
+                itemCount: _events.length - 2,
+                itemBuilder: (context, index) {
+                  final event = _events[index + 2];
+                  return Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                              child: Text(
+                                '${event['startDate']}: ${event['eventName']}',
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              onPressed: () {
+                               print(event);
+                              })));
+                },
+              ),
             ),
           ],
         ),
@@ -282,11 +169,100 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => EventEdit()), // Navigate to EventEdit
+            MaterialPageRoute(
+                builder: (context) => EventEdit()), // Navigate to EventEdit
           );
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF4B2E83),
+      ),
+    );
+  }
+
+  Widget _buildEventCard(
+      BuildContext context, String title, String imageUrl, String eventId) {
+    return Padding(
+      padding: EdgeInsets.only(right: 13),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => EventPage(
+                title: title,
+                image: imageUrl,
+                eventId: eventId, // Pass the event ID to the EventPage
+              ),
+            ),
+          );
+        },
+        child: Stack(
+          children: [
+            Container(
+              width: 343,
+              height: 360,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.5), // Adjust opacity here
+                    BlendMode.dstATop,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 343,
+              height: 360,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Color(0xFF4B2E83)
+                    .withOpacity(0.4), // Shade color with opacity
+              ),
+            ),
+            Positioned.fill(
+              child: Center(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ViewEvent {}
+
+class EventPage extends StatelessWidget {
+  final String title;
+  final String image;
+  final String eventId;
+
+  EventPage({required this.title, required this.image, required this.eventId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Image.network(image),
+            Text('Details for event ID: $eventId'),
+          ],
+        ),
       ),
     );
   }
