@@ -38,7 +38,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
 
   Future<void> fetchEventDetails() async {
     final url =
-        Uri.parse('http://10.0.0.95:8080/event/byId/${widget.eventID}');
+        Uri.parse('http://172.17.96.1:8080/event/byId/${widget.eventID}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
