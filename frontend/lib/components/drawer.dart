@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/home.dart';
 import 'package:frontend/pages/calendar.dart';
+import 'package:frontend/pages/login.dart';
 import 'package:frontend/pages/user_events.dart';
 
 // This widget defines the drawer menu that is displayed when the user taps on the hamburger icon.
@@ -26,7 +27,7 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 // Navigate to the Home page on tap
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
+                  MaterialPageRoute(builder: (context) => HomePage())
                 );
               },
             ),
@@ -47,6 +48,15 @@ class AppDrawer extends StatelessWidget {
                 // Navigate to the My Events page when tapped
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => UserEventsPage())
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Log Out', style: listTileStyle),
+              onTap: () {
+                // Navigate to the My Events page when tapped
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => LoginPage())
                 );
               },
             ),

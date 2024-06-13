@@ -1,15 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/eventedit.dart';
+import 'package:frontend/api_service.dart';
 import '../components/drawer.dart';
 import './event.dart';
 import './eventsearch.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+// Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Event> _events = [];
+  bool _isLoading = false;
+  String _error = "";
+
+  final apiService = ApiService('http://localhost:8080');
+
+  @override
+  void initState() {
+    super.initState();
+    loadEvents();
+  }
+
+  Future<void> loadEvents() async {
+    setState(() {
+      _isLoading = true;
+      _error = "";
+    });
+    try {
+      // Get the data string and pass it into fetchEvents
+      final data = await apiService.getHomePageData();
+      List<dynamic> jsonData = jsonDecode(data);
+      List<Event> events = jsonData.map((item) => Event.fromJson(item)).toList();
+      setState(() {
+        _events = events;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final dateFormat = DateFormat('M/d/yyyy');
+    final formattedDate = dateFormat.format(now);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -51,38 +98,33 @@ class HomePage extends StatelessWidget {
             Center(
               child: Padding(
                 padding: EdgeInsets.only(bottom: 10),
-                // New events
                 child: Text(
-                  'New This Week: XX/XX/20XX',
-                  textAlign: TextAlign.center,
+                  'New This Week: $formattedDate', 
+                  textAlign: TextAlign.center, 
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                     fontSize: 17,
-                  ),
-                ),
+                  )
+                )
               ),
             ),
-            // Featured Events displayed below
-            Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: SizedBox(
-                height: 360,
+            if (_isLoading)
+              Center(child: CircularProgressIndicator())
+            else if (_error.isNotEmpty)
+              Center(child: Text('Error: $_error'))
+            else
+              Expanded(
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    Padding(
+                  padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
+                  children: _events.map((event) {
+                    return Padding(
                       padding: EdgeInsets.only(right: 13),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EventPage(
-                                title: 'Event 1',
-                                image:
-                                    'https://i.natgeofe.com/n/8a4cd21e-3906-4c9d-8838-b13ef85f4b6e/tpc18-outdoor-gallery-1002418-12000351_01_3x2.jpg',
-                              ),
-                            ),
+                            MaterialPageRoute(builder: (context) => EventPage(title: event.eventName, image: event.image, navTo: 'home',))
                           );
                         },
                         child: Stack(
@@ -93,8 +135,7 @@ class HomePage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://i.natgeofe.com/n/8a4cd21e-3906-4c9d-8838-b13ef85f4b6e/tpc18-outdoor-gallery-1002418-12000351_01_3x2.jpg'),
+                                  image: NetworkImage(event.image),
                                   fit: BoxFit.cover,
                                   colorFilter: ColorFilter.mode(
                                     Colors.black.withOpacity(0.5), // Adjust opacity here
@@ -114,7 +155,7 @@ class HomePage extends StatelessWidget {
                             Positioned.fill(
                               child: Center(
                                 child: Text(
-                                  'Event 1',
+                                  event.eventName,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
@@ -124,83 +165,21 @@ class HomePage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ]
+                        )
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 13),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => EventPage(
-                                title: 'Event 2',
-                                image:
-                                    'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg',
-                              ),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
-                                  fit: BoxFit.cover,
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.5), // Adjust opacity here
-                                    BlendMode.dstATop,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 343,
-                              height: 360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Color(0xFF4B2E83).withOpacity(0.4), // Shade color with opacity
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: Center(
-                                child: Text(
-                                  'Event 2',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 ),
               ),
-            ),
             Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  'Other Events:',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
+                child: Text('Other Events:', textAlign: TextAlign.center, style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 17,
+                )),
               ),
             ),
             Column(
@@ -288,6 +267,47 @@ class HomePage extends StatelessWidget {
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF4B2E83),
       ),
+    );
+  }
+}
+
+class Event {
+  final int id;
+  final String eventName;
+  final String description;
+  final DateTime startTime;
+  final DateTime endTime;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String image;
+  final DateTime createdAt;
+  final List<dynamic> signedUpUsers;
+
+  Event({
+    required this.id,
+    required this.eventName,
+    required this.description,
+    required this.startTime,
+    required this.endTime,
+    required this.startDate,
+    required this.endDate,
+    required this.image,
+    required this.createdAt,
+    required this.signedUpUsers,
+  });
+
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+      id: json['id'],
+      eventName: json['eventName'],
+      description: json['description'],
+      startTime: DateTime.parse(json['startTime']),
+      endTime: DateTime.parse(json['endTime']),
+      startDate: DateTime.parse(json['startDate']),
+      endDate: DateTime.parse(json['endDate']),
+      image: json['image'],
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      signedUpUsers: List<dynamic>.from(json['signedUpUsers']),
     );
   }
 }

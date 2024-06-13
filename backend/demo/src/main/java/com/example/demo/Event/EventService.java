@@ -57,25 +57,15 @@ public class EventService {
      * @throws IllegalArgumentException if there are no events with images
      */
     public List<Event> getHomePageEvents() throws IllegalArgumentException{
-        List<Event> imageEvents = eventRepository.getSortedImageEvents();
+        LocalDate endOfWeek = LocalDate.now().plusDays(6);
+        List<Event> imageEvents = eventRepository.getSortedEventsWithinWeek(endOfWeek,LocalDate.now());
         if (imageEvents.isEmpty()) {
             throw new IllegalArgumentException("No image events found");
         }
-        // Get the events with images
-        if(imageEvents.size() > 2){
-            imageEvents = imageEvents.subList(0, 2);
+        // Get the events sorted and make limit to 7
+        if(imageEvents.size() > 7){
+            imageEvents = imageEvents.subList(0, 7);
         }
-        // get the rest of the events that are not already added
-        for(Event event : eventRepository.getSortedEvents()){
-            if(!imageEvents.contains(event)){
-                imageEvents.add(event);
-            }
-            // stop adding when there are enough events
-            if(imageEvents.size() == 7){
-                break;
-            }
-        }
-
         return imageEvents;
     }
 
