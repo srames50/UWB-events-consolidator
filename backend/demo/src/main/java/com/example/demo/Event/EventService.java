@@ -1,13 +1,13 @@
 package com.example.demo.Event;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Service class for managing Event-related operations.
@@ -25,6 +25,7 @@ public class EventService {
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
+
 
     /**
      * Retrieves all events from the repository.
@@ -285,6 +286,22 @@ public class EventService {
             throw new NullPointerException("Event not found");
         }
     }
+    /**
+     * Gets event By ID
+     * @param id ID of event
+     * @return evnt with the id
+     * @throws NullPointerException if no event exists
+     */
+    Event getByID(Integer id) {
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if(eventOptional.isPresent()){
+            return eventOptional.get();
+        }
+        else{
+            throw new NullPointerException("No event exists");
+        }
+    }
+
 
 
 }

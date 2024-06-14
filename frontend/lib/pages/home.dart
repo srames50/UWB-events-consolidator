@@ -1,5 +1,5 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/eventedit.dart';
 import 'package:frontend/api_service.dart';
 import '../components/drawer.dart';
 import './event.dart';
@@ -7,7 +7,6 @@ import './eventsearch.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
-// Must use links for images rather than assets - makes loading from DB a lot easier and seamless
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 // Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
 class HomePage extends StatefulWidget {
@@ -60,9 +59,12 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Eventipedia - UW Bothell', style: TextStyle(
-          color: Color(0xFF4B2E83),
-        ),),
+        title: const Text(
+          'Eventipedia - UW Bothell',
+          style: TextStyle(
+            color: Color(0xFF4B2E83),
+          ),
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -139,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                                     Colors.black.withOpacity(0.5), // Adjust opacity here
                                     BlendMode.dstATop,
                                   ),
-                                )
+                                ),
                               ),
                             ),
                             Container(
@@ -182,7 +184,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
+              children: [
                 SizedBox(
                   height: 295,
                   child: ListView(
@@ -190,51 +192,80 @@ class _HomePageState extends State<HomePage> {
                     children: const [
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 1', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 1',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 2', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 2',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 3', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 3',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 4', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 4',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15),
-                        child: Text('Month, Day: Event 5', textAlign: TextAlign.left, style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: 17,
-                        )),
+                        child: Text(
+                          'Month, Day: Event 5',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                     ],
-                  )
-                )
-              ]
-            )
-          ]
-        )
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => EventEdit()), // Navigate to EventEdit
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF4B2E83),
       ),
     );
   }
