@@ -1,11 +1,10 @@
 package com.example.demo.Event;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Configuration class for initializing events in the application.

@@ -199,6 +199,12 @@ public class EventController {
         eventService.addNewEvent(event);
     }
 
+    @GetMapping("/test/{param}")
+    public void getMethodName(@PathVariable String param) {
+        System.out.println(param);
+    }
+    
+
 
 
 

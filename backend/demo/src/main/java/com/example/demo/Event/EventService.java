@@ -302,6 +302,20 @@ public class EventService {
         }
     }
 
+    /**
+     * 
+     */
+    public void deleteEvent(Integer id){
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if(eventOptional.isPresent()){
+            int delInteger = eventOptional.get().getId();
+           eventRepository.deleteEventById(delInteger);
+        }
+        else{
+            throw new NullPointerException("No event exists");
+        }
+    }
+
 
 
 }
