@@ -9,6 +9,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 /**
  * Service class for managing Event-related operations.
  */
@@ -296,6 +298,22 @@ public class EventService {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if(eventOptional.isPresent()){
             return eventOptional.get();
+        }
+        else{
+            throw new NullPointerException("No event exists");
+        }
+    }
+
+    /**
+     * 
+     */
+    @Transactional
+    public void deleteEvent(Integer id){
+        System.out.println("2");
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if(eventOptional.isPresent()){
+            int delInteger = eventOptional.get().getId();
+           eventRepository.deleteEventById(delInteger);
         }
         else{
             throw new NullPointerException("No event exists");

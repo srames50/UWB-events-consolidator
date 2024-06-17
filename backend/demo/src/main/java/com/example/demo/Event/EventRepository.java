@@ -1,13 +1,13 @@
 package com.example.demo.Event;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for Event entity. Extends JpaRepository for basic CRUD operations.
@@ -58,6 +58,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      */
     @Query("SELECT e FROM Event e WHERE e.eventName LIKE %:phrase%")
     Optional<List<Event>> getEventsWithPhrase(String phrase);
+
+    @Modifying
+    @Query("DELETE FROM Event e WHERE e.id = :eventId")
+    void deleteEventById( int eventId);
+
+
 
 
 }
