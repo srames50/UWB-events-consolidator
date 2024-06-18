@@ -42,10 +42,12 @@ class ApiService {
     }
   }
 
-  Future<bool> isAdmin(int userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/user/isAdmin/$userId'));
+  Future<bool> isAdmin(String username) async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/users/$username/is_admin'));
     if (response.statusCode == 200) {
-      return jsonDecode(response.body) as bool;
+      final data = jsonDecode(response.body);
+      return data['isAdmin'] ?? false;
     } else {
       throw Exception('Failed to check admin status');
     }

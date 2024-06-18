@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:frontend/api_service.dart';
 import 'package:frontend/pages/adminedit.dart';
 import 'package:frontend/pages/eventedit.dart';
+
 import '../components/drawer.dart';
 import '../components/admindrawer.dart';
 import './event.dart';
@@ -22,12 +24,11 @@ Future<List<Event>> _fetchEvents(String jsonString) async {
       .toList();
 }
 
-// Must use links for images rather than assets - makes loading from DB a lot easier and seamless
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 // Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
 class HomePage extends StatefulWidget {
-
-  HomePage({super.key});
+  final bool isAdmin;
+  HomePage({Key? key, required this.isAdmin}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -37,7 +38,8 @@ class _HomePageState extends State<HomePage> {
   List<Event> _events = [];
   bool _isLoading = false;
   String _error = "";
-  bool _isAdmin = false;
+  bool get _isAdmin =>
+      widget.isAdmin; // Use the isAdmin value passed from the LoginPage
 
   final apiService = ApiService('http://localhost:8080');
 
@@ -49,12 +51,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Method to check if the current user is an admin
-  Future<void> _checkAdminStatus() async {
-    
-  }
+  Future<void> _checkAdminStatus() async {}
 
-  // method to call the API service (use try/catch to catch the error and capture it in the string)
-  loadEvents() async {
+  Future<void> loadEvents() async {
     setState(() {
       _isLoading = true;
       _error = "";
@@ -62,14 +61,18 @@ class _HomePageState extends State<HomePage> {
     try {
       // Get the data string and pass it into fetchEvents
       final data = await apiService.getHomePageData();
-      final events = await _fetchEvents(data);
+      List<dynamic> jsonData = jsonDecode(data);
+      List<Event> events =
+          jsonData.map((item) => Event.fromJson(item)).toList();
       setState(() {
         _events = events;
         _isLoading = false;
       });
     } catch (e) {
-      _error = e.toString();
-      _isLoading = false;
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
     }
   }
 
@@ -121,20 +124,17 @@ class _HomePageState extends State<HomePage> {
           children: [
             Center(
               child: Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                // New events
-                child: Text(
-                  'New this week: $formattedDate',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
-              ),
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text('New This Week: $formattedDate',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 17,
+                      ))),
             ),
             // Featured Events displayed below
+
             if (_isLoading)
               Center(child: CircularProgressIndicator())
             else if (_error.isNotEmpty)
@@ -148,61 +148,54 @@ class _HomePageState extends State<HomePage> {
                     return Padding(
                       padding: EdgeInsets.only(right: 13),
                       child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            // line below needs update
-                            MaterialPageRoute(
-                              builder: (context) => EventPage(
-                                title: event.eventName,
-                                image:
-                                    'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg',
-                              ),
-                            ),
-                          );
-                        },
-                        child: Stack(children: [
-                          Container(
-                            width: 343,
-                            height: 360,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                // Line below needs update
-                                image: NetworkImage(
-                                    'https://th-thumbnailer.cdn-si-edu.com/_sWVRSTELwK0-Ave6S4mFpxr1D0=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/25MikeReyfman_Waterfall.jpg'),
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                  Colors.black
-                                      .withOpacity(0.5), // Adjust opacity here
-                                  BlendMode.dstATop,
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => EventPage(
+                                      title: event.eventName,
+                                      image: event.image,
+                                      navTo: 'home',
+                                    )));
+                          },
+                          child: Stack(children: [
+                            Container(
+                              width: 343,
+                              height: 360,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                image: DecorationImage(
+                                  image: NetworkImage(event.image),
+                                  fit: BoxFit.cover,
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(
+                                        0.5), // Adjust opacity here
+                                    BlendMode.dstATop,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            width: 343,
-                            height: 360,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Color(0xFF4B2E83)
-                                  .withOpacity(0.4), // Shade color with opacity
-                            ),
-                          ),
-                          Positioned.fill(
-                            child: Center(
-                              child: Text(
-                                event.eventName,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
+                            Container(
+                              width: 343,
+                              height: 360,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Color(0xFF4B2E83).withOpacity(
+                                    0.4), // Shade color with opacity
                               ),
                             ),
-                          ),
-                        ]),
-                      ),
+                            Positioned.fill(
+                              child: Center(
+                                child: Text(
+                                  event.eventName,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ])),
                     );
                   }).toList(),
                 ),
@@ -210,15 +203,13 @@ class _HomePageState extends State<HomePage> {
             Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  'Other Events:',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
+                child: Text('Other Events:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 17,
+                    )),
               ),
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -293,6 +284,16 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => EventEdit()), // Navigate to EventEdit
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF4B2E83),
+      ),
     );
   }
 }
@@ -305,7 +306,7 @@ class Event {
   final DateTime endTime;
   final DateTime startDate;
   final DateTime endDate;
-  final String? image;
+  final String image;
   final DateTime createdAt;
   final List<dynamic> signedUpUsers;
 
@@ -332,8 +333,10 @@ class Event {
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       image: json['image'],
-      createdAt: DateTime.parse(json['createdAt']),
-      signedUpUsers: json['signedUpUsers'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      signedUpUsers: List<dynamic>.from(json['signedUpUsers']),
     );
   }
 }

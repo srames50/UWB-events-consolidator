@@ -3,6 +3,7 @@ package com.example.demo.Event;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -198,6 +199,17 @@ public class EventController {
     public void registerEvent(@RequestBody Event event) {
         eventService.addNewEvent(event);
     }
+    /**
+     * Endpoint for deleting an event
+     * Use to test Invoke-RestMethod -Method DELETE -Uri "http://localhost:8080/event/deleteEvent/4"
+     * @param id  id of the event being deleted
+     */
+    @DeleteMapping("/deleteEvent/{id}")
+    public void getMethodName(@PathVariable Integer id) {
+        System.out.println("1");
+        eventService.deleteEvent(id);
+    }
+    
 
 
 
