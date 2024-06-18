@@ -3,10 +3,12 @@ import 'package:frontend/api_service.dart';
 import 'package:frontend/pages/adminedit.dart';
 import 'package:frontend/pages/eventedit.dart';
 import '../components/drawer.dart';
+import '../components/admindrawer.dart';
 import './event.dart';
 import './eventsearch.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:frontend/pages/login.dart';
 
 // Async function that parses and filters JSON objects
 Future<List<Event>> _fetchEvents(String jsonString) async {
@@ -24,6 +26,7 @@ Future<List<Event>> _fetchEvents(String jsonString) async {
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 // Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
 class HomePage extends StatefulWidget {
+
   HomePage({super.key});
 
   @override
@@ -34,13 +37,20 @@ class _HomePageState extends State<HomePage> {
   List<Event> _events = [];
   bool _isLoading = false;
   String _error = "";
+  bool _isAdmin = false;
 
   final apiService = ApiService('http://localhost:8080');
 
   @override
   void initState() {
     super.initState();
+    _checkAdminStatus();
     loadEvents();
+  }
+
+  // Method to check if the current user is an admin
+  Future<void> _checkAdminStatus() async {
+    
   }
 
   // method to call the API service (use try/catch to catch the error and capture it in the string)
@@ -103,7 +113,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: AppDrawer(), // Drawer with navigation options
+      drawer: _isAdmin ? AdminDrawer() : AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Column(

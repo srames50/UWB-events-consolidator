@@ -41,4 +41,13 @@ class ApiService {
       throw Exception('Failed to load data: $e');
     }
   }
+
+  Future<bool> isAdmin(int userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/user/isAdmin/$userId'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as bool;
+    } else {
+      throw Exception('Failed to check admin status');
+    }
+  }
 }

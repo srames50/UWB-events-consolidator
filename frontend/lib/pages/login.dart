@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/pages/admin_console.dart';
 import 'package:frontend/pages/home.dart';
 import 'package:frontend/pages/authentication_service.dart';
+import 'package:frontend/pages/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    String loginResult = await _authService.login(
+    var loginResult = await _authService.login(
       _usernameController.text,
       _passwordController.text,
     );
@@ -31,15 +32,17 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = false;
     });
 
-    if (loginResult == 'success') {
+    if (loginResult?['status'] == 'success') {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
       );
-    } else if (loginResult == 'invalid_password') {
+    } else if (loginResult?['status'] == 'invalid_password') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Invalid Password')),
       );
-    } else if (loginResult == 'username_not_exist') {
+    } else if (loginResult?['status'] == 'username_not_exist') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(

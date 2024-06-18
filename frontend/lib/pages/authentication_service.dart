@@ -67,9 +67,9 @@ class AuthenticationService {
    * @param password The password of the user.
    * @return A string indicating the result of the login attempt.
    */
-  Future<String> login(String username, String password) async {
+  Future<Map<String, dynamic>?> login(String username, String password) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/user/allUsers'), // Endpoint to view all users
+      Uri.parse('$baseUrl/user/allUsers'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -80,15 +80,18 @@ class AuthenticationService {
       for (var user in users) {
         if (user['userName'] == username) {
           if (user['password'] == password) {
-            return 'success';
+            return {
+              'status': 'success',
+              'userId': user['id'] // Return user ID along with success status
+            };
           } else {
-            return 'invalid_password';
+            return {'status': 'invalid_password'};
           }
         }
       }
-      return 'username_not_exist'; // If no matching user found
+      return {'status': 'username_not_exist'};
     } else {
-      return 'request_failed'; // Request failed
+      return {'status': 'request_failed'};
     }
   }
 

@@ -29,7 +29,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
   String _startTime = "08:30:00";
   String _endTime = "12:00:00";
   final String _ip =
-      '172.17.96.1'; //// REPLACE WITH YOUR IP / IP OF HOST WHEN IN DEPLOYMENT
+      '192.168.167.100'; //// REPLACE WITH YOUR IP / IP OF HOST WHEN IN DEPLOYMENT
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
 
   Future<void> fetchEventDetails() async {
     final url =
-        Uri.parse('http://172.17.96.1:8080/event/byId/${widget.eventID}');
+        Uri.parse('http://192.168.167.100:8080/event/byId/${widget.eventID}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -278,7 +278,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
 
   Future<void> editStartDate(int id, String newDate) async {
     final String url =
-        'http://172.17.96.1:8080/event/editStartDate/$id'; //// CHNAGE WITH YOUR IP
+        'http://192.168.167.100:8080/event/editStartDate/$id'; //// CHNAGE WITH YOUR IP
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -293,7 +293,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
 
   Future<void> editEndDate(int id, String endDate) async {
     final String url =
-        'http://172.17.96.1:8080/event/editEndDate/$id'; //// CHNAGE WITH YOUR IP
+        'http://192.168.167.100:8080/event/editEndDate/$id'; //// CHNAGE WITH YOUR IP
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -308,7 +308,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
 
   Future<void> editEndTime(int id, String endTime) async {
     final String url =
-        'http://172.17.96.1:8080/event/editEndTime/$id'; //// CHNAGE WITH YOUR IP
+        'http://192.168.167.100:8080/event/editEndTime/$id'; //// CHNAGE WITH YOUR IP
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -433,7 +433,7 @@ class _AdminEventEditState extends State<AdminEventEdit> {
 
 Future<void> editStartTime(int id, String startTime) async {
   final String url =
-      'http://172.17.96.1:8080/event/editStartTime/$id'; //// CHNAGE WITH YOUR IP
+      'http://192.168.167.100:8080/event/editStartTime/$id'; //// CHNAGE WITH YOUR IP
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -448,7 +448,7 @@ Future<void> editStartTime(int id, String startTime) async {
 
 Future<void> editEventDescription(int id, String description) async {
   final String url =
-      'http://172.17.96.1:8080/event/editDescription/$id'; //// CHNAGE WITH YOUR IP
+      'http://192.168.167.100:8080/event/editDescription/$id'; //// CHNAGE WITH YOUR IP
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -463,7 +463,7 @@ Future<void> editEventDescription(int id, String description) async {
 
 Future<void> editEventName(int id, String newName) async {
   final String url =
-      'http://172.17.96.1:8080/event/editEventName/$id'; //// CHNAGE WITH YOUR IP
+      'http://192.168.167.100:8080/event/editEventName/$id'; //// CHNAGE WITH YOUR IP
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -478,7 +478,7 @@ Future<void> editEventName(int id, String newName) async {
 
 Future<void> editEventImage(int id, String newImage) async {
   final String url =
-      'http://172.17.96.1:8080/event/editImage/$id'; //// CHNAGE WITH YOUR IP
+      'http://192.168.167.100:8080/event/editImage/$id'; //// CHNAGE WITH YOUR IP
   try {
     final response = await http.post(
       Uri.parse(url),

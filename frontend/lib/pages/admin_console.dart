@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/eventedit.dart';
+import 'package:frontend/pages/adminedit.dart';
+import 'package:frontend/pages/home.dart'; // Import the AdminHomePage
+import 'package:frontend/pages/admin_event_delete.dart';
 
 class AdminConsolePage extends StatefulWidget {
   const AdminConsolePage({Key? key}) : super(key: key);
@@ -16,6 +19,16 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Console'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Back arrow icon
+          onPressed: () {
+            // Navigate back to the AdminHomePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
       ),
       body: Stack(
         children: [
@@ -50,7 +63,6 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                         context,
                         MaterialPageRoute(builder: (context) => EventEdit()),
                       ).then((_) {
-                        // After navigation, close the buttons
                         setState(() {
                           _showButtonsOnPage = false;
                         });
@@ -71,10 +83,16 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _showButtonsOnPage = !_showButtonsOnPage;
+                      // Navigate to the DeleteEvent page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminEventDeletePage()),
+                      ).then((_) {
+                        setState(() {
+                          _showButtonsOnPage = false;
+                        });
                       });
-                      // Navigate to delete event page
                     },
                     child: Text('Delete'),
                   ),
