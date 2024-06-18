@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:frontend/pages/viewEvent.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/eventedit.dart';
@@ -119,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   children: _events.take(2).map((event) {
                     return _buildEventCard(context, event['eventName'],
-                        event['image'], event['id'].toString());
+                        event['image'], event['id']);
                   }).toList(),
                 ),
               ),
@@ -148,18 +149,24 @@ class _HomePageState extends State<HomePage> {
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: TextButton(
-                              child: Text(
-                                '${event['startDate']}: ${event['eventName']}',
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                ),
+                            child: Text(
+                              '${event['startDate']}: ${event['eventName']}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                                fontSize: 20,
                               ),
-                              onPressed: () {
-                               print(event);
-                              })));
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => EventPageStatic(
+                                          eventId: event["id"],
+                                        )), // Navigate to EventEdit
+                              );
+                            },
+                          )));
                 },
               ),
             ),
@@ -180,16 +187,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildEventCard(
-      BuildContext context, String title, String imageUrl, String eventId) {
+      BuildContext context, String title, String imageUrl, int eventId) {
     return Padding(
       padding: EdgeInsets.only(right: 13),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => EventPage(
-                title: title,
-                image: imageUrl,
+              builder: (context) => EventPageStatic(
                 eventId: eventId, // Pass the event ID to the EventPage
               ),
             ),
@@ -241,29 +246,5 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ViewEvent {}
 
-class EventPage extends StatelessWidget {
-  final String title;
-  final String image;
-  final String eventId;
 
-  EventPage({required this.title, required this.image, required this.eventId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Image.network(image),
-            Text('Details for event ID: $eventId'),
-          ],
-        ),
-      ),
-    );
-  }
-}
