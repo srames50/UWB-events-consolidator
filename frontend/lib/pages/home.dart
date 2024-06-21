@@ -38,20 +38,13 @@ class _HomePageState extends State<HomePage> {
   List<Event> _events = [];
   bool _isLoading = false;
   String _error = "";
-  bool get _isAdmin =>
-      widget.isAdmin; // Use the isAdmin value passed from the LoginPage
-
   final apiService = ApiService('http://localhost:8080');
 
   @override
   void initState() {
     super.initState();
-    _checkAdminStatus();
     loadEvents();
   }
-
-  // Method to check if the current user is an admin
-  Future<void> _checkAdminStatus() async {}
 
   Future<void> loadEvents() async {
     setState(() {
@@ -116,7 +109,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: _isAdmin ? AdminDrawer() : AppDrawer(),
+      drawer: widget.isAdmin ? AdminDrawer() : AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Column(

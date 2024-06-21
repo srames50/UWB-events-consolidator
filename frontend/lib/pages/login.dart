@@ -33,9 +33,11 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (loginResult?['status'] == 'success') {
+      int userId = loginResult?['userId'];
+      bool isAdmin = await _authService.isAdmin(userId);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => HomePage(isAdmin: isAdmin),
         ),
       );
     } else if (loginResult?['status'] == 'invalid_password') {
@@ -71,7 +73,9 @@ class _LoginPageState extends State<LoginPage> {
 
     if (registerResult == 'success') {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomePage(isAdmin: false),
+        ),
       );
     } else if (registerResult == 'username_exists') {
       ScaffoldMessenger.of(context).showSnackBar(

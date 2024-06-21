@@ -25,7 +25,10 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
             // Navigate back to the AdminHomePage
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(
+                  builder: (context) => HomePage(
+                        isAdmin: false,
+                      )),
             );
           },
         ),
@@ -83,7 +86,7 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to the DeleteEvent page
+                      // Navigate to the EditEvent page
                       Navigator.push(
                         context,
                         MaterialPageRoute(

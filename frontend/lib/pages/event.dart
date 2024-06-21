@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart';
 import 'package:frontend/pages/calendar.dart';
 import 'package:frontend/pages/user_events.dart';
-
 import '../components/drawer.dart';
 import './event.dart';
 import './eventsearch.dart';
@@ -15,7 +14,7 @@ import './home.dart';
 /// Fetches an event by its name from a JSON string.
 ///
 /// The JSON string is parsed into a list of dynamic objects, which are then
-/// mapped to `Event` objects. The function returns the first event that matches
+/// mapped to Event objects. The function returns the first event that matches
 /// the given name.
 ///
 /// Args:
@@ -45,7 +44,11 @@ class EventPage extends StatefulWidget {
   final String image;
   final String navTo;
 
-  EventPage({super.key, required this.title, required this.image, required this.navTo});
+  EventPage(
+      {super.key,
+      required this.title,
+      required this.image,
+      required this.navTo});
 
   @override
   _EventPageState createState() => _EventPageState();
@@ -111,19 +114,18 @@ class _EventPageState extends State<EventPage> {
           builder: (context) {
             return IconButton(
               icon: const Icon(Icons.chevron_left),
-              onPressed: () {
+              onPressed: () async {
                 if (widget.navTo == 'home') {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomePage())
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => HomePage(
+                            isAdmin: false,
+                          )));
                 } else if (widget.navTo == 'userEvents') {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => UserEventsPage())
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UserEventsPage()));
                 } else if (widget.navTo == 'calendar') {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => CalendarPage())
-                  );
+                      MaterialPageRoute(builder: (context) => CalendarPage()));
                 }
               },
             );
@@ -131,52 +133,59 @@ class _EventPageState extends State<EventPage> {
         ),
       ),
       body: _isLoading
-        ? Center(child: CircularProgressIndicator())
-        : Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    width: 343,
-                    height: 360,
-                    decoration: const BoxDecoration(),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        widget.image, 
-                        fit: BoxFit.cover,
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 343,
+                      height: 360,
+                      decoration: const BoxDecoration(),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          widget.image,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ), 
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Text(formattedDate, textAlign: TextAlign.center, style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                    fontSize: 17,
-                  )),
-                ),
-                Text(time, textAlign: TextAlign.center, style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                  fontSize: 17,
-                )),
-                Padding(
-                  padding: EdgeInsets.all(14),
-                  child: Text(description, textAlign: TextAlign.center, style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                    fontSize: 17,
-                  )),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(formattedDate,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          fontSize: 17,
+                        )),
+                  ),
+                  Text(time,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                        fontSize: 17,
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(14),
+                    child: Text(description,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          fontSize: 17,
+                        )),
+                  ),
+                ],
+              ),
             ),
-          ),
-  );
-}}
+    );
+  }
+}
 
 class Event {
   final int id;
@@ -203,45 +212,55 @@ class Event {
     required this.signedUpUsers,
   });
 
-  /// Creates an `Event` object from a JSON map.
+  /// Creates an Event object from a JSON map.
   ///
-  /// The method attempts to parse the JSON map into an `Event` object.
-  /// If parsing fails, it prints an error and returns an `Event` object
+  /// The method attempts to parse the JSON map into an Event object.
+  /// If parsing fails, it prints an error and returns an Event object
   /// with default values.
   ///
   /// Args:
   ///   json (Map<String, dynamic>): The JSON map containing event data.
   ///
   /// Returns:
-  ///   Event: An `Event` object created from the JSON map.
+  ///   Event: An Event object created from the JSON map.
   factory Event.fromJson(Map<String, dynamic> json) {
-  try {
-    return Event(
-      id: json['id'] ?? 0,
-      eventName: json['eventName'] ?? 'Event Name',
-      description: json['description'] ?? 'Description',
-      startTime: json['startTime'] != null ? DateTime.parse(json['startTime']) : DateTime.now(),
-      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : DateTime.now(),
-      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : DateTime.now(),
-      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : DateTime.now(),
-      image: json['image'] ?? '', // Adjusted for null images
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
-      signedUpUsers: json['signedUpUsers'] ?? [],
-    );
-  } catch (e) {
-    print('Error parsing event: $e');
-    return Event(
-      id: 0,
-      eventName: 'Error Event',
-      description: 'Error Description',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
-      image: '',
-      createdAt: DateTime.now(),
-      signedUpUsers: [],
-    );
-  }
+    try {
+      return Event(
+        id: json['id'] ?? 0,
+        eventName: json['eventName'] ?? 'Event Name',
+        description: json['description'] ?? 'Description',
+        startTime: json['startTime'] != null
+            ? DateTime.parse(json['startTime'])
+            : DateTime.now(),
+        endTime: json['endTime'] != null
+            ? DateTime.parse(json['endTime'])
+            : DateTime.now(),
+        startDate: json['startDate'] != null
+            ? DateTime.parse(json['startDate'])
+            : DateTime.now(),
+        endDate: json['endDate'] != null
+            ? DateTime.parse(json['endDate'])
+            : DateTime.now(),
+        image: json['image'] ?? '', // Adjusted for null images
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'])
+            : DateTime.now(),
+        signedUpUsers: json['signedUpUsers'] ?? [],
+      );
+    } catch (e) {
+      print('Error parsing event: $e');
+      return Event(
+        id: 0,
+        eventName: 'Error Event',
+        description: 'Error Description',
+        startTime: DateTime.now(),
+        endTime: DateTime.now(),
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        image: '',
+        createdAt: DateTime.now(),
+        signedUpUsers: [],
+      );
+    }
   }
 }

@@ -8,25 +8,33 @@ import 'package:intl/intl.dart';
 
 // Function to fetch events from the API and return them as a map of DateTime to a list of events.
 Future<Map<DateTime, List<Event>>> _fetchEvents() async {
-  final apiService = ApiService('http://localhost:8080'); // Initialize ApiService with base URL
+  final apiService = ApiService(
+      'http://localhost:8080'); // Initialize ApiService with base URL
   try {
-    final data = await apiService.getAllEvents(); // Fetch all events from the API
-    final List<dynamic> jsonData = jsonDecode(data); // Decode JSON data from the response
-    Map<DateTime, List<Event>> eventsMap = {}; // Initialize an empty map to store events
+    final data =
+        await apiService.getAllEvents(); // Fetch all events from the API
+    final List<dynamic> jsonData =
+        jsonDecode(data); // Decode JSON data from the response
+    Map<DateTime, List<Event>> eventsMap =
+        {}; // Initialize an empty map to store events
     for (var json in jsonData) {
       Event? event;
       try {
-        event = Event.fromJson(json); // Parse each event JSON into an Event object
+        event =
+            Event.fromJson(json); // Parse each event JSON into an Event object
       } catch (e) {
         print('Error parsing event: $e'); // Error handling for JSON parsing
       }
       if (event != null && event.startDate != null) {
         // Check if the event and its start date are not null
-        DateTime dateOnly = DateTime(event.startDate!.year, event.startDate!.month, event.startDate!.day);
+        DateTime dateOnly = DateTime(event.startDate!.year,
+            event.startDate!.month, event.startDate!.day);
         if (eventsMap.containsKey(dateOnly)) {
           eventsMap[dateOnly]!.add(event); // Add event to existing date entry
         } else {
-          eventsMap[dateOnly] = [event]; // Create a new date entry with the event
+          eventsMap[dateOnly] = [
+            event
+          ]; // Create a new date entry with the event
         }
       }
     }
@@ -45,7 +53,8 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  late CalendarFormat _calendarFormat; // Format of the calendar (month, week, etc.)
+  late CalendarFormat
+      _calendarFormat; // Format of the calendar (month, week, etc.)
   late DateTime _focusedDay; // Currently focused day
   late DateTime _selectedDay; // Currently selected day
   Map<DateTime, List<Event>> _events = {}; // Map of events to display
@@ -54,9 +63,11 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     final now = DateTime.now(); // Get current date and time
-    _focusedDay = DateTime(now.year, now.month, now.day); // Set initial focused day to today
+    _focusedDay = DateTime(
+        now.year, now.month, now.day); // Set initial focused day to today
     _selectedDay = _focusedDay; // Set initial selected day to today
-    _calendarFormat = CalendarFormat.month; // Set initial calendar format to month
+    _calendarFormat =
+        CalendarFormat.month; // Set initial calendar format to month
     _fetchAndSetEvents(); // Fetch and set events on initialization
   }
 
@@ -78,7 +89,8 @@ class _CalendarPageState extends State<CalendarPage> {
             return IconButton(
               icon: const Icon(Icons.menu), // Menu icon button
               onPressed: () {
-                Scaffold.of(context).openDrawer(); // Open drawer on button press
+                Scaffold.of(context)
+                    .openDrawer(); // Open drawer on button press
               },
             );
           },
@@ -93,7 +105,8 @@ class _CalendarPageState extends State<CalendarPage> {
             lastDay: DateTime.utc(2030, 12, 31), // Last day of the calendar
             focusedDay: _focusedDay, // Focused day of the calendar
             calendarFormat: _calendarFormat, // Format of the calendar
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day), // Predicate to determine the selected day
+            selectedDayPredicate: (day) => isSameDay(
+                _selectedDay, day), // Predicate to determine the selected day
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDay = selectedDay; // Update selected day
@@ -101,11 +114,14 @@ class _CalendarPageState extends State<CalendarPage> {
               });
             },
             eventLoader: (day) {
-              final dateOnly = DateTime(day.year, day.month, day.day); // Normalize day to date only
-              return _events[dateOnly] ?? []; // Load events for the selected day
+              final dateOnly = DateTime(
+                  day.year, day.month, day.day); // Normalize day to date only
+              return _events[dateOnly] ??
+                  []; // Load events for the selected day
             },
           ),
-          Expanded(child: _buildEvents()), // Expanded widget to build event list
+          Expanded(
+              child: _buildEvents()), // Expanded widget to build event list
         ],
       ),
     );
@@ -113,8 +129,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // Build the list of events for the selected day
   Widget _buildEvents() {
-    final selectedDay = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day); // Normalize selected day to date only
-    final events = _events[selectedDay] ?? []; // Get events for the selected day
+    final selectedDay = DateTime(_selectedDay.year, _selectedDay.month,
+        _selectedDay.day); // Normalize selected day to date only
+    final events =
+        _events[selectedDay] ?? []; // Get events for the selected day
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,11 +152,12 @@ class _CalendarPageState extends State<CalendarPage> {
               itemBuilder: (context, index) {
                 final event = events[index]; // Event at the current index
                 return ListTile(
-                  leading: Icon(Icons.event, color: Colors.green), // Icon for the event
+                  leading: Icon(Icons.event,
+                      color: Colors.green), // Icon for the event
                   title: Text(
                     event.eventName,
                     style: TextStyle(fontWeight: FontWeight.bold),
-                  ),  
+                  ),
                   subtitle: Text(
                     '${DateFormat('MMM dd, yyyy').format(event.startDate!)} at ${DateFormat('h:mm a').format(event.startTime!)}',
                   ), // Event description and date/time
@@ -147,8 +166,10 @@ class _CalendarPageState extends State<CalendarPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => EventPage(
-                          title: event.eventName, // Pass event name to EventPage
-                          image: event.image ?? '', // Pass event image to EventPage
+                          title:
+                              event.eventName, // Pass event name to EventPage
+                          image: event.image ??
+                              '', // Pass event image to EventPage
                           navTo: 'calendar',
                         ),
                       ),

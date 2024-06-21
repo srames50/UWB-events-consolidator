@@ -115,4 +115,18 @@ class AuthenticationService {
       throw Exception('Failed to load user data');
     }
   }
+
+  Future<bool> isAdmin(int userId) async {
+    try {
+      var response = await http.get(Uri.parse('$baseUrl/user/isAdmin/$userId'));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to check admin status');
+      }
+    } catch (e) {
+      throw Exception('Failed to check admin status: $e');
+    }
+  }
 }
