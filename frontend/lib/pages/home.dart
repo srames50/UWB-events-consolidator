@@ -2,16 +2,36 @@ import 'dart:convert';
 import 'package:frontend/pages/viewEvent.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+
+import 'package:frontend/api_service.dart';
+import 'package:frontend/pages/adminedit.dart';
 import 'package:frontend/pages/eventedit.dart';
+
 import '../components/drawer.dart';
+import '../components/admindrawer.dart';
 import './event.dart';
 import './eventsearch.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:frontend/pages/login.dart';
+
+// Async function that parses and filters JSON objects
+Future<List<Event>> _fetchEvents(String jsonString) async {
+  // Get the json data by parsing the passed in string
+  final List<dynamic> jsonData = jsonDecode(jsonString);
+
+  // now return with the output stream: map it, where only events that are not null are used, and parse it to a list
+  return jsonData
+      .map((json) => Event.fromJson(json))
+      .where((event) => event.image != null)
+      .toList();
+}
 
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
+// Lines 135 and 147 needs to be updated when the database is updated with URLs rather than image links
 class HomePage extends StatefulWidget {
-   
-
-   HomePage({super.key});
+  final bool isAdmin;
+  HomePage({Key? key, required this.isAdmin}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,6 +39,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> _events = [];
+
 
   @override
   void initState() {
@@ -59,6 +80,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -93,7 +115,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: AppDrawer(), // Drawer with navigation options
+      drawer: widget.isAdmin ? AdminDrawer() : AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -113,12 +135,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+
             ),
             // Featured Events displayed below
-            Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: SizedBox(
-                height: 360,
+
+            if (_isLoading)
+              Center(child: CircularProgressIndicator())
+            else if (_error.isNotEmpty)
+              Center(child: Text('Error: $_error'))
+            else
+              Expanded(
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: _events.take(2).map((event) {
@@ -127,19 +153,16 @@ class _HomePageState extends State<HomePage> {
                   }).toList(),
                 ),
               ),
-            ),
             Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  'Other Events:',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
+                child: Text('Other Events:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 17,
+                    )),
               ),
             ),
             Expanded(
@@ -173,6 +196,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
+
           ],
         ),
       ),
@@ -248,6 +272,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 

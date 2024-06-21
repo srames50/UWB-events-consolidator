@@ -9,6 +9,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 /**
  * Service class for managing Event-related operations.
  */
@@ -57,16 +59,15 @@ public class EventService {
      * @throws IllegalArgumentException if there are no events with images
      */
     public List<Event> getHomePageEvents() throws IllegalArgumentException{
-        List<Event> imageEvents = eventRepository.getSortedImageEvents();
+        LocalDate endOfWeek = LocalDate.now().plusDays(6);
+        List<Event> imageEvents = eventRepository.getSortedEventsWithinWeek(endOfWeek,LocalDate.now());
         if (imageEvents.isEmpty()) {
             throw new IllegalArgumentException("No image events found");
         }
-        // Get the events with images
+        // Get the events sorted and make limit to 7
         if(imageEvents.size() > 7){
             imageEvents = imageEvents.subList(0, 7);
         }
-       
-
         return imageEvents;
     }
 
@@ -297,6 +298,22 @@ public class EventService {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if(eventOptional.isPresent()){
             return eventOptional.get();
+        }
+        else{
+            throw new NullPointerException("No event exists");
+        }
+    }
+
+    /**
+     * 
+     */
+    @Transactional
+    public void deleteEvent(Integer id){
+        System.out.println("2");
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if(eventOptional.isPresent()){
+            int delInteger = eventOptional.get().getId();
+           eventRepository.deleteEventById(delInteger);
         }
         else{
             throw new NullPointerException("No event exists");

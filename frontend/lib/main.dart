@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/viewEvent.dart'; 
+import 'package:frontend/pages/admin_console.dart';
 import 'api_service.dart';
 import 'package:frontend/pages/home.dart';
+import 'package:frontend/pages/login.dart';
 
 void main() {
   runApp(const App());
@@ -15,7 +16,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UWB Events',
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }

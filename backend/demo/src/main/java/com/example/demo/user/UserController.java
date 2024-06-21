@@ -1,11 +1,17 @@
 package com.example.demo.user;
 
-import com.example.demo.Event.Event;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.Event.Event;
 
 /**
  * REST controller for handling user-related requests.
@@ -37,6 +43,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/isAdmin/{id}")
+    public Boolean isAdmin(@PathVariable Integer id){
+        return userService.isAdmin(id);
+
+    }
+
     /**
      * Endpoint to Return the events for the user by ID
      * use http://localhost:8080/user/userEvents/ID
@@ -62,9 +74,6 @@ public class UserController {
             System.out.println(e.getMessage());
         }
     }
-
-
-
 
     /**
      * Endpoint to register a new user.

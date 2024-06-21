@@ -1,14 +1,14 @@
 package com.example.demo.user;
 
-import com.example.demo.Event.Event;
-import com.example.demo.Event.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.Event.Event;
+import com.example.demo.Event.EventRepository;
 
 /**
  * Service class for handling user-related operations.
@@ -93,5 +93,19 @@ public class UserService {
         else  {
             throw new IllegalArgumentException("Event not found");
         }
+    }
+    /*
+     * Logic for finding if the user is an admin
+     * @param id  of user searching for 
+     * @return admin powers of user if found
+     */
+    public Boolean isAdmin(Integer id){
+        Optional<User> possibleUser = userRepository.findById(id);
+        if(possibleUser.isPresent()) {
+            return possibleUser.get().getAdminPowers();
+        }else{
+            throw new IllegalArgumentException("User not found");
+        }
+    
     }
 }
