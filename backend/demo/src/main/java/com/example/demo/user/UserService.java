@@ -1,14 +1,14 @@
 package com.example.demo.user;
 
-import com.example.demo.Event.Event;
-import com.example.demo.Event.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.Event.Event;
+import com.example.demo.Event.EventRepository;
 
 /**
  * Service class for handling user-related operations.
@@ -80,7 +80,7 @@ public class UserService {
         Optional<User> userOpt = userRepository.findById(userId);
         Optional<Event> eventOpt = eventRepository.findById(eventId);
         if (userOpt.isPresent() && eventOpt.isPresent()) {
-            if(userOpt.get().getEvents().contains(eventOpt.get())) {
+            if(eventOpt.get().getSignedUpUsers().contains(eventOpt.get())) {
                 throw new IllegalArgumentException("User already has an event");
             }
             User user = userOpt.get();

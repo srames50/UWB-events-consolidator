@@ -21,7 +21,7 @@ class _EventPageStaticState extends State<EventPageStatic> {
   String _endDate = "2024-06-15";
   String _startTime = "08:30:00";
   String _endTime = "12:00:00";
-  int _userId = 7;
+  int _userId = 6;
 
   late Future<Map<String, dynamic>> _eventDetails;
 
