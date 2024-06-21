@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/viewEvent.dart'; 
 import 'api_service.dart';
 import 'package:frontend/pages/home.dart';
 
@@ -12,7 +13,7 @@ class App extends StatelessWidget {
   // Root of application
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'UWB Events',
       home: HomePage(),
     );
