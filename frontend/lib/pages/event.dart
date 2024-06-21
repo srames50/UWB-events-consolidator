@@ -51,7 +51,7 @@ class _EventPageState extends State<EventPage> {
               icon: const Icon(Icons.chevron_left),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
+                  MaterialPageRoute(builder: (context) =>  HomePage())
                 );
               },
             );

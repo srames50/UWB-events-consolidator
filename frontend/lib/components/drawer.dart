@@ -26,7 +26,7 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 // Navigate to the Home page on tap
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HomePage())
+                  MaterialPageRoute(builder: (context) =>  HomePage())
                 );
               },
             ),

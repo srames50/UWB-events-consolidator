@@ -9,7 +9,9 @@ import './eventsearch.dart';
 
 // HomePage represents the main page of the application that has the header, a search button, and a list of featured events.
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+   
+
+   HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -56,6 +58,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime today = DateTime.now();;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -92,7 +95,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: AppDrawer(), // Drawer with navigation options
       body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -101,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.only(bottom: 10),
                 // New events
                 child: Text(
-                  'New This Week: XX/XX/20XX',
+                  'New This Week: ${today.year}-${today.month}-${today.day}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
