@@ -139,11 +139,6 @@ class _HomePageState extends State<HomePage> {
             ),
             // Featured Events displayed below
 
-            if (_isLoading)
-              Center(child: CircularProgressIndicator())
-            else if (_error.isNotEmpty)
-              Center(child: Text('Error: $_error'))
-            else
               Expanded(
                 child: ListView(
                   scrollDirection: Axis.horizontal,
