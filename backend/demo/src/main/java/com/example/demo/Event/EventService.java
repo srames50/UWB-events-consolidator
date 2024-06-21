@@ -65,16 +65,7 @@ public class EventService {
         if(imageEvents.size() > 7){
             imageEvents = imageEvents.subList(0, 7);
         }
-        // get the rest of the events that are not already added
-        for(Event event : eventRepository.getSortedEvents()){
-            if(!imageEvents.contains(event)){
-                imageEvents.add(event);
-            }
-            // stop adding when there are enough events
-            if(imageEvents.size() == 7){
-                break;
-            }
-        }
+       
 
         return imageEvents;
     }
