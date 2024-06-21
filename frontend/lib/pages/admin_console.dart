@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/eventedit.dart';
+import 'package:frontend/pages/adminedit.dart';
+import 'package:frontend/pages/home.dart'; // Import the AdminHomePage
+import 'package:frontend/pages/admin_event_delete.dart';
 
 class AdminConsolePage extends StatefulWidget {
   const AdminConsolePage({Key? key}) : super(key: key);
@@ -15,6 +19,19 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Console'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Back arrow icon
+          onPressed: () {
+            // Navigate back to the AdminHomePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage(
+                        isAdmin: false,
+                      )),
+            );
+          },
+        ),
       ),
       body: Stack(
         children: [
@@ -44,10 +61,15 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _showButtonsOnPage = !_showButtonsOnPage;
+                      // Navigate to the EditEvent page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EventEdit()),
+                      ).then((_) {
+                        setState(() {
+                          _showButtonsOnPage = false;
+                        });
                       });
-                      // Navigate to edit event page
                     },
                     child: Text('Edit'),
                   ),
@@ -64,10 +86,16 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _showButtonsOnPage = !_showButtonsOnPage;
+                      // Navigate to the EditEvent page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminEventDeletePage()),
+                      ).then((_) {
+                        setState(() {
+                          _showButtonsOnPage = false;
+                        });
                       });
-                      // Navigate to delete event page
                     },
                     child: Text('Delete'),
                   ),

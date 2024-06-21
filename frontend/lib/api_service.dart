@@ -41,4 +41,26 @@ class ApiService {
       throw Exception('Failed to load data: $e');
     }
   }
+
+  // Method to get user details
+  Future<Map<String, dynamic>> getUserDetails(int userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/users/$userId'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to load user details');
+    }
+  }
+
+  // Method to check if the user is an admin
+  Future<bool> checkAdminStatus(int userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/user/isAdmin/$userId'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as bool;
+    } else {
+      throw Exception('Failed to check admin status');
+    }
+  }
 }

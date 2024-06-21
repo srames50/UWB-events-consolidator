@@ -1,13 +1,15 @@
+// File: lib/components/admin_drawer.dart
+
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/home.dart';
 import 'package:frontend/pages/calendar.dart';
 import 'package:frontend/pages/login.dart';
 import 'package:frontend/pages/user_events.dart';
+import 'package:frontend/pages/admin_console.dart';
 
-// This widget defines the drawer menu that is displayed when the user taps on the hamburger icon.
-// The drawer contains navigation links to the Home, Calendar, and My Events pages.
-class AppDrawer extends StatelessWidget {
-  AppDrawer({super.key});
+// This widget defines the drawer menu for admin users.
+class AdminDrawer extends StatelessWidget {
+  AdminDrawer({super.key});
 
   // Creating a common style for the ListTile titles
   TextStyle get listTileStyle => const TextStyle(
@@ -16,6 +18,7 @@ class AppDrawer extends StatelessWidget {
         fontSize: 19,
       );
 
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor:
@@ -27,9 +30,9 @@ class AppDrawer extends StatelessWidget {
             title: Text('Home', style: listTileStyle),
             onTap: () {
               // Navigate to the Home page on tap
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => HomePage(
-                        isAdmin: false,
+                        isAdmin: true,
                       )));
             },
           ),
@@ -38,7 +41,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Calendar', style: listTileStyle),
             onTap: () {
               // Navigate to the Calendar page on tap
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const CalendarPage()));
             },
           ),
@@ -47,16 +50,26 @@ class AppDrawer extends StatelessWidget {
             title: Text('My Events', style: listTileStyle),
             onTap: () {
               // Navigate to the My Events page when tapped
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => UserEventsPage()));
             },
           ),
+          // ListTile for moving to the Admin Console page
+          ListTile(
+            title: Text('Admin Console', style: listTileStyle),
+            onTap: () {
+              // Navigate to the Admin Console page when tapped
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => AdminConsolePage()));
+            },
+          ),
+          // ListTile for logging out
           ListTile(
             title: Text('Log Out', style: listTileStyle),
             onTap: () {
-              // Navigate to the My Events page when tapped
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => LoginPage()));
+              // Navigate to the Login page when tapped
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => LoginPage()));
             },
           ),
         ],

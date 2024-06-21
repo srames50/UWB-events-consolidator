@@ -37,7 +37,8 @@ class _UserEventsPageState extends State<UserEventsPage> {
       // Get the data string and pass it into fetchEvents
       final data = await apiService.getHomePageData();
       List<dynamic> jsonData = jsonDecode(data);
-      List<Event> events = jsonData.map((item) => Event.fromJson(item)).toList();
+      List<Event> events =
+          jsonData.map((item) => Event.fromJson(item)).toList();
       setState(() {
         _events = events;
         _isLoading = false;
@@ -58,9 +59,12 @@ class _UserEventsPageState extends State<UserEventsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Eventipedia - UW Bothell', style: TextStyle(
-          color: Color(0xFF4B2E83),
-        ),),
+        title: const Text(
+          'Eventipedia - UW Bothell',
+          style: TextStyle(
+            color: Color(0xFF4B2E83),
+          ),
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -78,7 +82,9 @@ class _UserEventsPageState extends State<UserEventsPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EventSearchPage()), // Navigate to EventSearchPage
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EventSearchPage()), // Navigate to EventSearchPage
               );
             },
             color: Color(0xFF4B2E83),
@@ -87,10 +93,9 @@ class _UserEventsPageState extends State<UserEventsPage> {
       ),
       drawer: AppDrawer(), // Drawer with navigation options
       body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          padding: const EdgeInsets.only(top: 10.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             if (_isLoading)
               Center(child: CircularProgressIndicator())
             else if (_error.isNotEmpty)
@@ -102,80 +107,76 @@ class _UserEventsPageState extends State<UserEventsPage> {
                   padding: EdgeInsets.fromLTRB(13, 0, 0, 0),
                   children: _events.map((event) {
                     final eventDate = dateFormat.format(event.startDate);
-                    String formattedTime = '${timeFormat.format(event.startTime).toLowerCase()} - ${timeFormat.format(event.endTime).toLowerCase()}';
+                    String formattedTime =
+                        '${timeFormat.format(event.startTime).toLowerCase()} - ${timeFormat.format(event.endTime).toLowerCase()}';
                     return Padding(
                       padding: EdgeInsets.only(bottom: 13),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => EventPage(title: event.eventName, image: event.image, navTo: 'userEvents',))
-                          );
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EventPage(
+                                    title: event.eventName,
+                                    image: event.image,
+                                    navTo: 'userEvents',
+                                  )));
                         },
                         child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 11, 0),
-                            child: Stack(
-                              children: [
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 11, 0),
+                              child: Stack(children: [
                                 Container(
                                   width: 370,
                                   height: 100,
                                   decoration: BoxDecoration(
-                                    color: Colors.white, // Set the background color to white
+                                    color: Colors
+                                        .white, // Set the background color to white
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
                                         spreadRadius: 2,
                                         blurRadius: 8,
-                                        offset: Offset(0, 4), // changes position of shadow
+                                        offset: Offset(
+                                            0, 4), // changes position of shadow
                                       ),
                                     ],
                                   ),
-                                ),  
-                                
-                                Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                      child: Center(
-                                        child: Text(
-                                          event.eventName,
-                                          style: TextStyle(
-                                            color: Color(0xFF4B2E83),
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
+                                ),
+                                Column(children: [
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                    child: Center(
                                       child: Text(
-                                        '$eventDate | $formattedTime',
+                                        event.eventName,
                                         style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
+                                          color: Color(0xFF4B2E83),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                  ]
-                                ),
-                              ]
-                            ),
-                          )
-                          
-                        ),
-                        
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      '$eventDate | $formattedTime',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ]),
+                              ]),
+                            )),
                       ),
                     );
                   }).toList(),
                 ),
               ),
-          ]
-        )
-      ),
+          ])),
     );
   }
 }
@@ -215,7 +216,9 @@ class Event {
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       image: json['image'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
       signedUpUsers: List<dynamic>.from(json['signedUpUsers']),
     );
   }
