@@ -63,4 +63,16 @@ class ApiService {
       throw Exception('Failed to check admin status');
     }
   }
+
+  Future<void> deleteEvent(int id) async {
+    try {
+      final response =
+          await http.delete(Uri.parse('$baseUrl/event/deleteEvent/$id'));
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete event: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete event: $e');
+    }
+  }
 }
