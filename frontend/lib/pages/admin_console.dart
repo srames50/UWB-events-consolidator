@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/api_service.dart'; // Import your ApiService
+import 'package:frontend/pages/eventcreate.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import 'eventedit.dart';
 import 'admin_event_delete.dart';
@@ -117,8 +118,14 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _showButtonsOnPage = !_showButtonsOnPage;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminEventCreate()),
+                      ).then((_) {
+                        setState(() {
+                          _showButtonsOnPage = false;
+                        });
                       });
                     },
                     child: Text('Add'),

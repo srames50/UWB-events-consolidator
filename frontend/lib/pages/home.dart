@@ -277,16 +277,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => EventEdit()), // Navigate to EventEdit
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Color(0xFF4B2E83),
-      ),
     );
   }
 }
