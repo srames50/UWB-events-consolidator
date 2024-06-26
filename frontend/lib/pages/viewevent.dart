@@ -21,6 +21,7 @@ class _EventPageStaticState extends State<EventPageStatic> {
   String _endDate = "2024-06-15";
   String _startTime = "08:30:00";
   String _endTime = "12:00:00";
+  int _userId = 6;
 
   late Future<Map<String, dynamic>> _eventDetails;
 
@@ -32,7 +33,8 @@ class _EventPageStaticState extends State<EventPageStatic> {
 
   Future<Map<String, dynamic>> fetchEventDetails() async {
     print({widget.eventId});
-    final url = Uri.parse('http://192.168.86.26:8080/event/byId/${widget.eventId}');
+    final url =
+        Uri.parse('http://192.168.86.26:8080/event/byId/${widget.eventId}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -48,7 +50,8 @@ class _EventPageStaticState extends State<EventPageStatic> {
         });
         return eventData;
       } else {
-        print('Failed to load event details. Status code: ${response.statusCode}');
+        print(
+            'Failed to load event details. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching event details: $e');
@@ -78,55 +81,99 @@ class _EventPageStaticState extends State<EventPageStatic> {
             return Center(child: Text('No data available.'));
           } else {
             // Data successfully loaded, build UI
-            return Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black, // Specify the border color here
-                          width: 2, // Specify the border width here
+            return Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black, // Specify the border color here
+                              width: 2, // Specify the border width here
+                            ),
+                          ),
+                          child: Image.network(
+                            _image,
+                            height:
+                                200, // Set a fixed height for the image container
+                            width: double.infinity, // Take full width of parent
+                            fit: BoxFit.cover, // Cover the container
+                          ),
                         ),
                       ),
-                      child: Image.network(
-                        _image,
-                        height: 200, // Set a fixed height for the image container
-                        width: double.infinity, // Take full width of parent
-                        fit: BoxFit.cover, // Cover the container
+                      Text(
+                        '$_startDate - $_endDate',
+                        style: TextStyle(fontSize: 16),
                       ),
-                    ),
+                      SizedBox(height: 10),
+                      Text('$_startTime - $_endTime'),
+                      SizedBox(height: 20),
+                      Text(
+                        _description,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Inter",
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '$_startDate - $_endDate',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 10),
-                  Text('$_startTime - $_endTime'),
-                  SizedBox(height: 20),
-                  Text(
-                    _description,
-                    textAlign: TextAlign.center,
+                ),
+                const Positioned(
+                  bottom: 32.0,
+                  right: 80.0,
+                  child: Text(
+                    "Cick to add event!",
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "Inter",
-                    ),
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Inter",
+                        ),
                   ),
-                ],
-              ),
+                
+                ),
+                Positioned(
+                  bottom: 16.0,
+                  right: 16.0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      sendPostRequest();
+                    },
+                    shape: CircleBorder(), // Make it circular
+                    child: Icon(Icons.add),
+                    backgroundColor: Colors.purple,
+                  ),
+                ),
+              ],
             );
           }
         },
       ),
     );
   }
+  void sendPostRequest() async {
+    final url = Uri.parse('http://192.168.86.26:8080/user/addUserToEvent/$_userId/${widget.eventId}');
+    try {
+      final response = await http.post(
+        url,
+      );
+      if (response.statusCode == 200) {
+      } else {
+        print('Failed to send post request. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending post request: $e');
+    }
+  }
 }
-
