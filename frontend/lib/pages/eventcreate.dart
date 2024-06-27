@@ -101,12 +101,16 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
                   initialTime: TimeOfDay.now(),
                   builder: (context, child) {
                     return MediaQuery(
-                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                      data: MediaQuery.of(context)
+                          .copyWith(alwaysUse24HourFormat: false),
                       child: Theme(
                         data: ThemeData.light().copyWith(
                           primaryColor: Color(0xFF4B2E83),
-                          colorScheme: ColorScheme.light(primary: Color(0xFF4B2E83), secondary: Color(0xFFB7A57A)),
-                          buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                          colorScheme: ColorScheme.light(
+                              primary: Color(0xFF4B2E83),
+                              secondary: Color(0xFFB7A57A)),
+                          buttonTheme: ButtonThemeData(
+                              textTheme: ButtonTextTheme.primary),
                         ),
                         child: child!,
                       ),
@@ -121,12 +125,16 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
                   initialTime: TimeOfDay.now(),
                   builder: (context, child) {
                     return MediaQuery(
-                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                      data: MediaQuery.of(context)
+                          .copyWith(alwaysUse24HourFormat: false),
                       child: Theme(
                         data: ThemeData.light().copyWith(
                           primaryColor: Color(0xFF4B2E83),
-                          colorScheme: ColorScheme.light(primary: Color(0xFF4B2E83), secondary: Color(0xFFB7A57A)),
-                          buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                          colorScheme: ColorScheme.light(
+                              primary: Color(0xFF4B2E83),
+                              secondary: Color(0xFFB7A57A)),
+                          buttonTheme: ButtonThemeData(
+                              textTheme: ButtonTextTheme.primary),
                         ),
                         child: child!,
                       ),
@@ -143,7 +151,9 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
                 });
               },
               child: Text(
-                _selectedDateRange == null || _startTime == null || _endTime == null
+                _selectedDateRange == null ||
+                        _startTime == null ||
+                        _endTime == null
                     ? "Tap to Select Date and Time"
                     : "${DateFormat('yyyy-MM-dd').format(_selectedDateRange!.start)} - ${DateFormat('yyyy-MM-dd').format(_selectedDateRange!.end)}\nStart Time: ${_startTime!.format(context)} - End Time: ${_endTime!.format(context)}",
                 textAlign: TextAlign.center,
@@ -201,7 +211,8 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
   }
 
   Future<void> addEvent() async {
-    final String url = 'http://172.17.96.1:8080/event/addEvent'; // Change to your IP
+    final String url =
+        'http://0.0.0.0:8080/event/addEvent'; // Change to your IP
     try {
       final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
       final DateFormat dateTimeFormat = DateFormat("yyyy-MM-ddTHH:mm:ss");
@@ -294,7 +305,8 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(descriptionController.text),
+            onPressed: () =>
+                Navigator.of(context).pop(descriptionController.text),
             child: const Text("SAVE"),
           ),
           TextButton(
