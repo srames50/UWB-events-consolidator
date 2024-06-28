@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AuthenticationService {
-  static const String baseUrl = 'http://localhost:8080'; // Connecting to URL
+  static const String baseUrl = 'http://192.168.1.45:8080'; // Connecting to URL
 
   /**
    * Registers a new user or logs in if the user already exists.

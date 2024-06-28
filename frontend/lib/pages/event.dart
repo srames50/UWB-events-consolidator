@@ -61,7 +61,7 @@ class _EventPageState extends State<EventPage> {
   bool _isLoading = false;
   String _error = "";
 
-  final apiService = ApiService('http://localhost:8080');
+  final apiService = ApiService('http://192.168.1.45:8080');
 
   @override
   void initState() {
