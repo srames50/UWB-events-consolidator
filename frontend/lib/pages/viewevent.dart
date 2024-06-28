@@ -34,7 +34,7 @@ class _EventPageStaticState extends State<EventPageStatic> {
   Future<Map<String, dynamic>> fetchEventDetails() async {
     print({widget.eventId});
     final url =
-        Uri.parse('http://192.168.86.26:8080/event/byId/${widget.eventId}');
+        Uri.parse('http://192.168.1.45:8080/event/byId/${widget.eventId}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -163,7 +163,7 @@ class _EventPageStaticState extends State<EventPageStatic> {
     );
   }
   void sendPostRequest() async {
-    final url = Uri.parse('http://192.168.86.26:8080/user/addUserToEvent/$_userId/${widget.eventId}');
+    final url = Uri.parse('http://192.168.1.45:8080/user/addUserToEvent/$_userId/${widget.eventId}');
     try {
       final response = await http.post(
         url,
