@@ -21,7 +21,7 @@ class _AdminConsolePageState extends State<AdminConsolePage> {
   List<Event> _events = [];
 
   // Initialize the ApiService with the base URL
-  final ApiService apiService = ApiService('http://localhost:8080');
+  final ApiService apiService = ApiService('http://192.168.1.45:8080');
 
   @override
   void initState() {

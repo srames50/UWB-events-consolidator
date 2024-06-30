@@ -24,7 +24,7 @@ class _EventSearchPageState extends State<EventSearchPage> {
   // Method to fetch events from the API and set the state
   Future<void> _fetchAndSetEvents() async {
     final apiService = ApiService(
-        'http://localhost:8080'); // Initialize ApiService with base URL
+        'http://192.168.1.45:8080'); // Initialize ApiService with base URL
     try {
       final data =
           await apiService.getAllEvents(); // Fetch all events from the API

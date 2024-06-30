@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Function to fetch events from the API and return them as a map of DateTime to a list of events.
 Future<Map<DateTime, List<Event>>> _fetchEvents() async {
   final apiService = ApiService(
-      'http://localhost:8080'); // Initialize ApiService with base URL
+      'http://192.168.1.45:8080'); // Initialize ApiService with base URL
   try {
     final data =
         await apiService.getAllEvents(); // Fetch all events from the API
