@@ -212,7 +212,7 @@ class _AdminEventCreateState extends State<AdminEventCreate> {
 
   Future<void> addEvent() async {
     final String url =
-        'http://192.168.167.99:8080/event/addEvent'; // Change to your IP
+        'http://0.0.0.0:8080/event/addEvent'; // Change to your IP
     try {
       final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
       final DateFormat dateTimeFormat = DateFormat("yyyy-MM-ddTHH:mm:ss");

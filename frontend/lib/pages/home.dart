@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchHomeEvents() async {
-    final url = Uri.parse('http://192.168.167.99:8080/event/homeEvents');
+    final url = Uri.parse('http://0.0.0.0:8080/event/homeEvents');
 
     try {
       final response = await http.get(url);
