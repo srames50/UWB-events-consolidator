@@ -4,6 +4,7 @@ import 'package:frontend/pages/admin_console.dart';
 import 'package:frontend/pages/home.dart';
 import 'package:frontend/pages/authentication_service.dart';
 import 'package:frontend/pages/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,6 +36,11 @@ class _LoginPageState extends State<LoginPage> {
     if (loginResult?['status'] == 'success') {
       int userId = loginResult?['userId'];
       bool isAdmin = await _authService.isAdmin(userId);
+
+      // Save the admin status to SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isAdmin', isAdmin);
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => HomePage(isAdmin: isAdmin),

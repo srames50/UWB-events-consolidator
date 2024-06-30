@@ -9,12 +9,13 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
 
 server:
-  address: 0.0.0.0
+  address: 192.168.167.99
   port: 8080
 dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.3
+  shared_preferences: ^2.0.13
 
   table_calendar: ^3.0.0
 
